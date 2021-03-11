@@ -1703,6 +1703,8 @@ List&lt;String&gt;能否转为List&lt;Object&gt;：不能，关键原因在于�
 <h1 id="2-复制算法"><a href="#2-复制算法" class="headerlink" title="2. 复制算法"></a>2. 复制算法</h1><p>为了解决效率问题，复制算法应运而生，它将可用内存按容量划分为大小相等的两块，每次只使用其中的一块。当这块的内存用完了，就将还存活着的对象复制到另外一块上面，然后再把已使用过的内存空间一次清理掉。这样使得每次都是对整个半区进行内存回收，内存分配时也就不用考虑内存碎片等复杂情况，只要移动堆顶指针，按顺序分配内存即可，实现简单，运行高效。</p>
 <p>不过这种算法的代价是将内存缩小为原来的一般，未免太高了一点。</p>
 <p><img src="../../../../images/githubpages/JVM%E7%B3%BB%E5%88%97/%E5%A4%8D%E5%88%B6%E7%AE%97%E6%B3%95%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="复制算法示意图"></p>
+<span id="more"></span>
+
 <p><strong>现在的商业虚拟机都采用这种收集算法来回收新生代</strong>，IBM公司的专门研究表明，新生代中的对象98%是“朝生夕死”的，所以并不需要按照 1:1 的比例来划分内存空间，而是将内存分为一块较大的Eden空间和两块较小的Survivor空间，每次使用Eden和其中一块Survivor。当回收时，将Eden和Survivor中还存活着的对象一次性地复制到另外一块Survivor空间上，最后清理掉Eden和刚才用过的Survivor空间。</p>
 <p>Hotspot虚拟机默认Eden:Survivor的大小比例是8:1，也就是每次新生代中可用内存空间为整个新生代容量的90%（80% + 10%），只有10%的内存会被 “浪费”。当然98%的对象可回收知识一般场景下的数据，我们没有办法保证每次回收都只有不多于10%的对象存活，当Survivor空间不够用时，需要依赖其他内存（这里指老年代）进行分配担保。</p>
 <p>内存的分配担保就好比我们去银行借款，如果我们信誉很好，在98%的情况下都能按时偿还，于是银行可能会默认我们下一次也能按时按量地偿还贷款，只需要有一个担保人能保证如果我不能还款时，可以从他的账户扣钱，那银行就认为没有风险了。内存的分配担保也一样，如果另外一块Survivor空间没有足够存放上一次新生代收集下来的存活对象时，这些对象将直接通过分配担保机制进入老年代。</p>
@@ -1722,6 +1724,7 @@ List&lt;String&gt;能否转为List&lt;Object&gt;：不能，关键原因在于�
       </categories>
       <tags>
         <tag>JVM</tag>
+        <tag>GC</tag>
       </tags>
   </entry>
   <entry>
@@ -1733,6 +1736,8 @@ List&lt;String&gt;能否转为List&lt;Object&gt;：不能，关键原因在于�
 <h1 id="1-Serial-收集器"><a href="#1-Serial-收集器" class="headerlink" title="1. Serial 收集器"></a>1. Serial 收集器</h1><p>Serial 收集器是最基本、发展历史最悠久的收集器。<strong>这个收集器是一个单线程的收集器，</strong> 但它的单线程意义并不仅仅说明它只会使用一个CPU或一条收集线程去完成垃圾收集工作，<strong>更重要的是它进行垃圾收集时，必须暂停其他所有的工作线程，直到它收集结束。</strong> “Stop the world” 这个名字也许听起来很酷，但这项工作实际上是由虚拟机在后台自动发起和自动完成的，在用户不可见的情况下把用户正常的线程全部停掉，这对很多应用来说都是难以接受的。</p>
 <p>从JDK1.3开始一直到JDK1.7，Hotspot虚拟机开发团队为消除或者减少工作线程因内存回收而导致停顿的努力一直在进行着，从Serial收集器到Parallel收集器，再到Concurrent Mark Sweep（CMS）乃至GC收集器的最前沿成果Garbage First（G1）收集器，我们看到一个越来越优秀、也越来越复杂的收集器出现，用户线程的停顿时间在不断缩短，但是仍然没有办法完全消除。寻找更优秀的垃圾收集器的工作仍在继续！</p>
 <p>尽管如此，Serial收集器依然是虚拟机运行在Client模式下的默认新生代收集器。它也有着由于其他收集器的地方：简单而高效，对于限定单个CPU的环境来说，Serial收集器由于没有线程交互的开销，专心做垃圾收集自然可以获得更高的单线程收集效率。</p>
+<span id="more"></span>
+
 <h1 id="2-ParNew-收集器"><a href="#2-ParNew-收集器" class="headerlink" title="2. ParNew 收集器"></a>2. ParNew 收集器</h1><p><strong>ParNew其实就是Serial的多线程版本，</strong> 除了使用多条线程进行垃圾收集之外，其他行为包括Serial收集器可用的所有控制参数、收集算法、Stop the world、对象分配规则、回收策略都与Serial收集器完全一样。</p>
 <p>ParNew收集器除了多线程收集之外，其他与Serial收集器并没有太多创新之处，但它却是许多运行在Server模式下的虚拟机中首选的新生代收集器，其中有个与性能无关但很重要的原因，除了Serial收集器外，目前只有它能与CMS收集器配合工作。</p>
 <p>ParNew收集器在单CPU的环境中绝对不会有比Serial收集器更好的效果，甚至由于存在线程交互的开销，该收集器在通过超线程技术实现的两个CPU的环境中都不能百分之百的保证可以超越Serial收集器。当然，随着可以使用的CPU的数量的增多，它对于GC时系统资源的有效利用还是很有好处的。它默认开启的收集线程数与CPU的数量相同，在CPU非常多的环境下，可以使用-XX:ParallelGCThreads参数来限制垃圾收集的线程数。</p>
@@ -1788,6 +1793,7 @@ List&lt;String&gt;能否转为List&lt;Object&gt;：不能，关键原因在于�
       </categories>
       <tags>
         <tag>JVM</tag>
+        <tag>GC</tag>
       </tags>
   </entry>
   <entry>
@@ -1810,6 +1816,7 @@ List&lt;String&gt;能否转为List&lt;Object&gt;：不能，关键原因在于�
       </categories>
       <tags>
         <tag>JVM</tag>
+        <tag>GC</tag>
       </tags>
   </entry>
   <entry>
@@ -1820,6 +1827,8 @@ List&lt;String&gt;能否转为List&lt;Object&gt;：不能，关键原因在于�
 <h1 id="1-对象优先在Eden分配"><a href="#1-对象优先在Eden分配" class="headerlink" title="1. 对象优先在Eden分配"></a>1. 对象优先在Eden分配</h1><p>大多数情况下，对象在新生代Eden区中分配。当Eden区没有足够空间进行分配时，虚拟机将发起一次Minor GC。</p>
 <p>虚拟机提供了-XX:PrintGCDetails这个收集器日志参数，告诉虚拟机在发生垃圾收集行为时打印内存回收日志，并且在进程退出的时候输出当前的内存各区域分配情况。在实际应用中，内存回收日志一般是打印到文件后通过日志工具进行分析。</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> gc;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestGC</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> _1MB = <span class="number">1024</span> * <span class="number">1024</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        testAllocation();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * VM参数：-verbose:gc -Xms20M -Xmx20M -Xmn10M -XX:+PrintGCDetails -XX:SurvivorRatio=8</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * -Xms20M -Xmx20M -Xmn10M 限制了Java堆大小为20M，不可扩展，其中10M分配给新生代，剩下的10M分配给老年代。</span></span><br><span class="line"><span class="comment">     * -XX:SurvivorRatio=8决定了新生代中Eden区与一个Survivor区的空间比例是8:1。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">testAllocation</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">byte</span>[] allocation1, allocation2, allocation3, allocation4;</span><br><span class="line">        allocation1 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * _1MB];</span><br><span class="line">        allocation2 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * _1MB];</span><br><span class="line">        allocation3 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2</span> * _1MB];</span><br><span class="line">        allocation4 = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">4</span> * _1MB];  <span class="comment">// 出现一次Minor GC</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<span id="more"></span>
 
 <p>我的电脑是64位系统，JVM默认跑的是Server模式，可通过java -version命令查看，目前64位只支持server模式；在32位的虚拟机在目录JAVA_HOME/jre/lib/i386/jvm.cfg 还是可以修改Clinet还是Server模式的 ：</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">D:\Project\IntellJ2\DemoIO&gt;java -version</span><br><span class="line">java version <span class="string">&quot;1.8.0_144&quot;</span></span><br><span class="line">Java(TM) <span class="function">SE Runtime <span class="title">Environment</span> <span class="params">(build <span class="number">1.8</span><span class="number">.0_144</span>-b01)</span></span></span><br><span class="line"><span class="function">Java <span class="title">HotSpot</span><span class="params">(TM)</span> 64-Bit Server <span class="title">VM</span> <span class="params">(build <span class="number">25.144</span>-b01, mixed mode)</span></span></span><br></pre></td></tr></table></figure>
@@ -1870,6 +1879,7 @@ List&lt;String&gt;能否转为List&lt;Object&gt;：不能，关键原因在于�
       </categories>
       <tags>
         <tag>JVM</tag>
+        <tag>GC</tag>
       </tags>
   </entry>
   <entry>

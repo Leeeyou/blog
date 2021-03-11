@@ -29,9 +29,10 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://leeeyou.github.io/iBlogWebsite/2018/images/githubpages/JVM%E7%B3%BB%E5%88%97/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8.png">
 <meta property="article:published_time" content="2018-09-25T08:47:22.000Z">
-<meta property="article:modified_time" content="2021-03-05T03:22:54.411Z">
+<meta property="article:modified_time" content="2021-03-11T13:06:41.988Z">
 <meta property="article:author" content="Leeeyou">
 <meta property="article:tag" content="JVM">
+<meta property="article:tag" content="GC">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://leeeyou.github.io/iBlogWebsite/2018/images/githubpages/JVM%E7%B3%BB%E5%88%97/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8.png">
 
@@ -221,7 +222,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-03-05 11:22:54" itemprop="dateModified" datetime="2021-03-05T11:22:54+08:00">2021-03-05</time>
+                <time title="Modified: 2021-03-11 21:06:41" itemprop="dateModified" datetime="2021-03-11T21:06:41+08:00">2021-03-11</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -250,6 +251,8 @@
 <h1 id="1-Serial-收集器"><a href="#1-Serial-收集器" class="headerlink" title="1. Serial 收集器"></a>1. Serial 收集器</h1><p>Serial 收集器是最基本、发展历史最悠久的收集器。<strong>这个收集器是一个单线程的收集器，</strong> 但它的单线程意义并不仅仅说明它只会使用一个CPU或一条收集线程去完成垃圾收集工作，<strong>更重要的是它进行垃圾收集时，必须暂停其他所有的工作线程，直到它收集结束。</strong> “Stop the world” 这个名字也许听起来很酷，但这项工作实际上是由虚拟机在后台自动发起和自动完成的，在用户不可见的情况下把用户正常的线程全部停掉，这对很多应用来说都是难以接受的。</p>
 <p>从JDK1.3开始一直到JDK1.7，Hotspot虚拟机开发团队为消除或者减少工作线程因内存回收而导致停顿的努力一直在进行着，从Serial收集器到Parallel收集器，再到Concurrent Mark Sweep（CMS）乃至GC收集器的最前沿成果Garbage First（G1）收集器，我们看到一个越来越优秀、也越来越复杂的收集器出现，用户线程的停顿时间在不断缩短，但是仍然没有办法完全消除。寻找更优秀的垃圾收集器的工作仍在继续！</p>
 <p>尽管如此，Serial收集器依然是虚拟机运行在Client模式下的默认新生代收集器。它也有着由于其他收集器的地方：简单而高效，对于限定单个CPU的环境来说，Serial收集器由于没有线程交互的开销，专心做垃圾收集自然可以获得更高的单线程收集效率。</p>
+<span id="more"></span>
+
 <h1 id="2-ParNew-收集器"><a href="#2-ParNew-收集器" class="headerlink" title="2. ParNew 收集器"></a>2. ParNew 收集器</h1><p><strong>ParNew其实就是Serial的多线程版本，</strong> 除了使用多条线程进行垃圾收集之外，其他行为包括Serial收集器可用的所有控制参数、收集算法、Stop the world、对象分配规则、回收策略都与Serial收集器完全一样。</p>
 <p>ParNew收集器除了多线程收集之外，其他与Serial收集器并没有太多创新之处，但它却是许多运行在Server模式下的虚拟机中首选的新生代收集器，其中有个与性能无关但很重要的原因，除了Serial收集器外，目前只有它能与CMS收集器配合工作。</p>
 <p>ParNew收集器在单CPU的环境中绝对不会有比Serial收集器更好的效果，甚至由于存在线程交互的开销，该收集器在通过超线程技术实现的两个CPU的环境中都不能百分之百的保证可以超越Serial收集器。当然，随着可以使用的CPU的数量的增多，它对于GC时系统资源的有效利用还是很有好处的。它默认开启的收集线程数与CPU的数量相同，在CPU非常多的环境下，可以使用-XX:ParallelGCThreads参数来限制垃圾收集的线程数。</p>
@@ -309,6 +312,7 @@
       <footer class="post-footer">
           <div class="post-tags">
               <a href="/iBlogWebsite/tags/JVM/" rel="tag"># JVM</a>
+              <a href="/iBlogWebsite/tags/GC/" rel="tag"># GC</a>
           </div>
 
         
@@ -411,7 +415,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/iBlogWebsite/tags/">
           
-        <span class="site-state-item-count">85</span>
+        <span class="site-state-item-count">86</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
