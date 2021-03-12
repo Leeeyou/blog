@@ -1699,10 +1699,10 @@ List&lt;String&gt;能否转为List&lt;Object&gt;：不能，关键原因在于�
     <content><![CDATA[<p>下面介绍4种收集算法，分别是标记-清除算法、复制算法、标记-整理算法、分代收集算法。这里更多的是偏思想和算法的，理论性稍强。</p>
 <h1 id="1-标记-清除算法"><a href="#1-标记-清除算法" class="headerlink" title="1. 标记-清除算法"></a>1. 标记-清除算法</h1><p>该算法分为 “标记” 和 “清除” 两个阶段：首先标记出所有需要回收的对象，在标记完成后统一回收所有被标记的对象。后续的收集算法都是基于这种思路并对其不足进行改进而得到的。</p>
 <p>它的主要不足有两个：一个是效率问题，标记和清除两个过程的效率都不高；另一个是空间问题，<strong>标记清除之后会产生大量不连续的内存碎片，空间碎片太多可能会导致以后在程序运行过程中需要分配较大对象时，无法找到足够的连续内存而不得不提前触发另一次垃圾收集动作。</strong></p>
-<p><img src="../../../../images/githubpages/JVM%E7%B3%BB%E5%88%97/%E6%A0%87%E8%AE%B0-%E6%B8%85%E6%A5%9A%E7%AE%97%E6%B3%95%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="标记-清除算法示意图"></p>
+<p><img src="https://github.com/Leeeyou/blog/blob/master/images/2018/code/jvm-gc-mark-clear.png?raw=true" alt="jvm-gc-mark-clear"></p>
 <h1 id="2-复制算法"><a href="#2-复制算法" class="headerlink" title="2. 复制算法"></a>2. 复制算法</h1><p>为了解决效率问题，复制算法应运而生，它将可用内存按容量划分为大小相等的两块，每次只使用其中的一块。当这块的内存用完了，就将还存活着的对象复制到另外一块上面，然后再把已使用过的内存空间一次清理掉。这样使得每次都是对整个半区进行内存回收，内存分配时也就不用考虑内存碎片等复杂情况，只要移动堆顶指针，按顺序分配内存即可，实现简单，运行高效。</p>
 <p>不过这种算法的代价是将内存缩小为原来的一般，未免太高了一点。</p>
-<p><img src="../../../../images/githubpages/JVM%E7%B3%BB%E5%88%97/%E5%A4%8D%E5%88%B6%E7%AE%97%E6%B3%95%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="复制算法示意图"></p>
+<p><img src="https://github.com/Leeeyou/blog/blob/master/images/2018/code/jvm-gc-copy.png?raw=true" alt="jvm-gc-copy"></p>
 <span id="more"></span>
 
 <p><strong>现在的商业虚拟机都采用这种收集算法来回收新生代</strong>，IBM公司的专门研究表明，新生代中的对象98%是“朝生夕死”的，所以并不需要按照 1:1 的比例来划分内存空间，而是将内存分为一块较大的Eden空间和两块较小的Survivor空间，每次使用Eden和其中一块Survivor。当回收时，将Eden和Survivor中还存活着的对象一次性地复制到另外一块Survivor空间上，最后清理掉Eden和刚才用过的Survivor空间。</p>
@@ -1710,7 +1710,7 @@ List&lt;String&gt;能否转为List&lt;Object&gt;：不能，关键原因在于�
 <p>内存的分配担保就好比我们去银行借款，如果我们信誉很好，在98%的情况下都能按时偿还，于是银行可能会默认我们下一次也能按时按量地偿还贷款，只需要有一个担保人能保证如果我不能还款时，可以从他的账户扣钱，那银行就认为没有风险了。内存的分配担保也一样，如果另外一块Survivor空间没有足够存放上一次新生代收集下来的存活对象时，这些对象将直接通过分配担保机制进入老年代。</p>
 <h1 id="3-标记-整理算法"><a href="#3-标记-整理算法" class="headerlink" title="3. 标记-整理算法"></a>3. 标记-整理算法</h1><p>复制收集算法在对象存活率较高时就要进行较多的复制操作，效率将会变低。更关键的是，如果不想浪费50%的空间，就需要有额外的空间进行分配担保，以应对被使用的内存中所有对象都100%存活的极端情况，所以在老年代一般不能直接选用这种算法。</p>
 <p>根据老年代的特点，标记-整理算法应运而生，标记过程仍然与标记-清除算法一样，但不是直接对可回收对象进行清理，而是让所有存活的对象都向一端移动，然后直接清理掉端边界以外的内存。</p>
-<p><img src="../../../../images/githubpages/JVM%E7%B3%BB%E5%88%97/%E6%A0%87%E8%AE%B0-%E6%95%B4%E7%90%86%E7%AE%97%E6%B3%95%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="标记-整理算法示意图"></p>
+<p><img src="https://github.com/Leeeyou/blog/blob/master/images/2018/code/jvm-gc-mark-sort-out.png?raw=true" alt="jvm-gc-mark-sort-out"></p>
 <h1 id="4-分代收集算法"><a href="#4-分代收集算法" class="headerlink" title="4. 分代收集算法"></a>4. 分代收集算法</h1><p>当前商业虚拟机的垃圾收集都采用分代收集算法，这种算法并没有什么新的思想，只是根据对象存活周期的不同将内存划分为几块。一般是Java堆分为新生代和老年代，这样就可以根据各个年代的特点采用最适当的收集算法。</p>
 <p><strong>在新生代中，每次垃圾收集时都发现有大批对象死去，只有少量存活，那就选用复制算法，只需要付出少量存活对象的复制成本就可以完成收集。而老年代中因为对象存活率高、没有额外空间对它进行分配担保，就必须使用标记-清理或者标记-整理算法来进行回收。</strong></p>
 <hr>
@@ -1731,7 +1731,7 @@ List&lt;String&gt;能否转为List&lt;Object&gt;：不能，关键原因在于�
     <title>JVM系列之GC-Part2收集器</title>
     <url>/iBlogWebsite/2018/09/25/2018/2018-09-25-JVM%E7%B3%BB%E5%88%97%E4%B9%8BGC-Part2%E6%94%B6%E9%9B%86%E5%99%A8/</url>
     <content><![CDATA[<p>如果说收集算法是内存回收的方法论，那么垃圾收集器就是内存回收的具体实现。下图展示了7中作用于不同分代的收集器，如果两个收集器之间存在连线，就说明他们可以搭配使用。虚拟机所在的区域，则表示它是属于新生代收集器还是老年代收集器。</p>
-<p><img src="../../../../images/githubpages/JVM%E7%B3%BB%E5%88%97/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8.png" alt="垃圾收集器"></p>
+<p><img src="https://github.com/Leeeyou/blog/blob/master/images/2018/code/jvm-gc-garbage-collector.png?raw=true" alt="jvm-gc-garbage-collector"></p>
 <p>虽然我们是在对各个收集器进行比较，但并非为了挑选一个最好的收集器。因为直到现在为止还没有最好的收集器出现，更加没有万能的收集器，所以我们选择的只是对具体应用最合适的收集器。这点不需要更多解释就能证明：如果有一个放之四海皆准、任何场景下都适用的完美收集器存在，那么Hotspot虚拟机就没有必要实现那么多不同的收集器了。</p>
 <h1 id="1-Serial-收集器"><a href="#1-Serial-收集器" class="headerlink" title="1. Serial 收集器"></a>1. Serial 收集器</h1><p>Serial 收集器是最基本、发展历史最悠久的收集器。<strong>这个收集器是一个单线程的收集器，</strong> 但它的单线程意义并不仅仅说明它只会使用一个CPU或一条收集线程去完成垃圾收集工作，<strong>更重要的是它进行垃圾收集时，必须暂停其他所有的工作线程，直到它收集结束。</strong> “Stop the world” 这个名字也许听起来很酷，但这项工作实际上是由虚拟机在后台自动发起和自动完成的，在用户不可见的情况下把用户正常的线程全部停掉，这对很多应用来说都是难以接受的。</p>
 <p>从JDK1.3开始一直到JDK1.7，Hotspot虚拟机开发团队为消除或者减少工作线程因内存回收而导致停顿的努力一直在进行着，从Serial收集器到Parallel收集器，再到Concurrent Mark Sweep（CMS）乃至GC收集器的最前沿成果Garbage First（G1）收集器，我们看到一个越来越优秀、也越来越复杂的收集器出现，用户线程的停顿时间在不断缩短，但是仍然没有办法完全消除。寻找更优秀的垃圾收集器的工作仍在继续！</p>
@@ -1834,7 +1834,7 @@ List&lt;String&gt;能否转为List&lt;Object&gt;：不能，关键原因在于�
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line">D:\Project\IntellJ2\DemoIO&gt;java -version</span><br><span class="line">java version <span class="string">&quot;1.8.0_144&quot;</span></span><br><span class="line">Java(TM) <span class="function">SE Runtime <span class="title">Environment</span> <span class="params">(build <span class="number">1.8</span><span class="number">.0_144</span>-b01)</span></span></span><br><span class="line"><span class="function">Java <span class="title">HotSpot</span><span class="params">(TM)</span> 64-Bit Server <span class="title">VM</span> <span class="params">(build <span class="number">25.144</span>-b01, mixed mode)</span></span></span><br></pre></td></tr></table></figure>
 
 <p>运行时，设置JVM参数可以参考下图：</p>
-<p><img src="../../../../images/githubpages/JVM%E7%B3%BB%E5%88%97/%E5%AF%B9%E8%B1%A1%E4%BC%98%E5%85%88%E5%88%86%E9%85%8D%E5%88%B0Eden.png" alt="对象优先分配到Eden"></p>
+<p><img src="https://github.com/Leeeyou/blog/blob/master/images/2018/code/jvm-gc-priority-allocation-of-objects-to-eden.png?raw=true" alt="jvm-gc-priority-allocation-of-objects-to-eden"></p>
 <p>运行结果如下，打印了详细的GC信息：</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="number">0.125</span>: [GC (Allocation Failure) [PSYoungGen: 6303K-&gt;808K(9216K)] 6303K-&gt;4912K(19456K), <span class="number">0.0034768</span> secs] [Times: user=<span class="number">0.00</span> sys=<span class="number">0.00</span>, real=<span class="number">0.00</span> secs] </span><br><span class="line">Heap</span><br><span class="line"> PSYoungGen      total 9216K, used 7189K [<span class="number">0x00000000ff600000</span>, <span class="number">0x0000000100000000</span>, <span class="number">0x0000000100000000</span>)</span><br><span class="line">  eden space 8192K, <span class="number">77</span>% used [<span class="number">0x00000000ff600000</span>,<span class="number">0x00000000ffc3b610</span>,<span class="number">0x00000000ffe00000</span>)</span><br><span class="line">  from space 1024K, <span class="number">78</span>% used [<span class="number">0x00000000ffe00000</span>,<span class="number">0x00000000ffeca020</span>,<span class="number">0x00000000fff00000</span>)</span><br><span class="line">  to   space 1024K, <span class="number">0</span>% used [<span class="number">0x00000000fff00000</span>,<span class="number">0x00000000fff00000</span>,<span class="number">0x0000000100000000</span>)</span><br><span class="line"> ParOldGen       total 10240K, used 4104K [<span class="number">0x00000000fec00000</span>, <span class="number">0x00000000ff600000</span>, <span class="number">0x00000000ff600000</span>)</span><br><span class="line">  object space 10240K, <span class="number">40</span>% used [<span class="number">0x00000000fec00000</span>,<span class="number">0x00000000ff002020</span>,<span class="number">0x00000000ff600000</span>)</span><br><span class="line"> Metaspace       used 3468K, capacity 4496K, committed 4864K, reserved 1056768K</span><br><span class="line">  <span class="class"><span class="keyword">class</span> <span class="title">space</span>    <span class="title">used</span> 381<span class="title">K</span>, <span class="title">capacity</span> 388<span class="title">K</span>, <span class="title">committed</span> 512<span class="title">K</span>, <span class="title">reserved</span> 1048576<span class="title">K</span></span></span><br></pre></td></tr></table></figure>
 
