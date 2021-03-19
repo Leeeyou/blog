@@ -183,6 +183,92 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://leeeyou.github.io/iBlogWebsite/2018/09/25/2018/2018-09-25-JVM%E7%B3%BB%E5%88%97%E4%B9%8BGC-Part2%E6%94%B6%E9%9B%86%E5%99%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars1.githubusercontent.com/u/6735624?s=460&v=4">
+      <meta itemprop="name" content="Leeeyou">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Leeeyou123">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/iBlogWebsite/2018/09/25/2018/2018-09-25-JVM%E7%B3%BB%E5%88%97%E4%B9%8BGC-Part2%E6%94%B6%E9%9B%86%E5%99%A8/" class="post-title-link" itemprop="url">JVM系列之GC-Part2收集器</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-09-25 16:47:22" itemprop="dateCreated datePublished" datetime="2018-09-25T16:47:22+08:00">2018-09-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-03-12 10:32:04" itemprop="dateModified" datetime="2021-03-12T10:32:04+08:00">2021-03-12</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/iBlogWebsite/categories/code/" itemprop="url" rel="index"><span itemprop="name">code</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>如果说收集算法是内存回收的方法论，那么垃圾收集器就是内存回收的具体实现。下图展示了7中作用于不同分代的收集器，如果两个收集器之间存在连线，就说明他们可以搭配使用。虚拟机所在的区域，则表示它是属于新生代收集器还是老年代收集器。</p>
+<p><img src="https://github.com/Leeeyou/blog/blob/master/images/2018/code/jvm-gc-garbage-collector.png?raw=true" alt="jvm-gc-garbage-collector"></p>
+<p>虽然我们是在对各个收集器进行比较，但并非为了挑选一个最好的收集器。因为直到现在为止还没有最好的收集器出现，更加没有万能的收集器，所以我们选择的只是对具体应用最合适的收集器。这点不需要更多解释就能证明：如果有一个放之四海皆准、任何场景下都适用的完美收集器存在，那么Hotspot虚拟机就没有必要实现那么多不同的收集器了。</p>
+<h1 id="1-Serial-收集器"><a href="#1-Serial-收集器" class="headerlink" title="1. Serial 收集器"></a>1. Serial 收集器</h1><p>Serial 收集器是最基本、发展历史最悠久的收集器。<strong>这个收集器是一个单线程的收集器，</strong> 但它的单线程意义并不仅仅说明它只会使用一个CPU或一条收集线程去完成垃圾收集工作，<strong>更重要的是它进行垃圾收集时，必须暂停其他所有的工作线程，直到它收集结束。</strong> “Stop the world” 这个名字也许听起来很酷，但这项工作实际上是由虚拟机在后台自动发起和自动完成的，在用户不可见的情况下把用户正常的线程全部停掉，这对很多应用来说都是难以接受的。</p>
+<p>从JDK1.3开始一直到JDK1.7，Hotspot虚拟机开发团队为消除或者减少工作线程因内存回收而导致停顿的努力一直在进行着，从Serial收集器到Parallel收集器，再到Concurrent Mark Sweep（CMS）乃至GC收集器的最前沿成果Garbage First（G1）收集器，我们看到一个越来越优秀、也越来越复杂的收集器出现，用户线程的停顿时间在不断缩短，但是仍然没有办法完全消除。寻找更优秀的垃圾收集器的工作仍在继续！</p>
+<p>尽管如此，Serial收集器依然是虚拟机运行在Client模式下的默认新生代收集器。它也有着由于其他收集器的地方：简单而高效，对于限定单个CPU的环境来说，Serial收集器由于没有线程交互的开销，专心做垃圾收集自然可以获得更高的单线程收集效率。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/iBlogWebsite/2018/09/25/2018/2018-09-25-JVM%E7%B3%BB%E5%88%97%E4%B9%8BGC-Part2%E6%94%B6%E9%9B%86%E5%99%A8/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://leeeyou.github.io/iBlogWebsite/2018/09/25/2018/2018-09-25-JVM%E7%B3%BB%E5%88%97%E4%B9%8BGC-Part1%E6%94%B6%E9%9B%86%E7%AE%97%E6%B3%95/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1211,106 +1297,10 @@ List&lt;String&gt;能否转为List&lt;Object&gt;：不能，关键原因在于�
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://leeeyou.github.io/iBlogWebsite/2018/08/28/2018/2018-08-28-Java%E4%B9%8B%E5%86%85%E9%83%A8%E7%B1%BB/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://avatars1.githubusercontent.com/u/6735624?s=460&v=4">
-      <meta itemprop="name" content="Leeeyou">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Leeeyou123">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/iBlogWebsite/2018/08/28/2018/2018-08-28-Java%E4%B9%8B%E5%86%85%E9%83%A8%E7%B1%BB/" class="post-title-link" itemprop="url">Java之内部类</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2018-08-28 00:00:00" itemprop="dateCreated datePublished" datetime="2018-08-28T00:00:00+08:00">2018-08-28</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-03-05 11:22:54" itemprop="dateModified" datetime="2021-03-05T11:22:54+08:00">2021-03-05</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/iBlogWebsite/categories/code/" itemprop="url" rel="index"><span itemprop="name">code</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="1-成员内部类"><a href="#1-成员内部类" class="headerlink" title="1. 成员内部类"></a>1. 成员内部类</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Outer</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age = <span class="number">99</span>;</span><br><span class="line">    String name = <span class="string">&quot;Coco&quot;</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Inner</span></span>&#123;</span><br><span class="line">        String name = <span class="string">&quot;Jayden&quot;</span>;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">show</span><span class="params">()</span></span>&#123;</span><br><span class="line">            System.out.println(Outer.<span class="keyword">this</span>.name);</span><br><span class="line">            System.out.println(name);</span><br><span class="line">            System.out.println(age);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Inner <span class="title">getInnerClass</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Inner();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        Outer o = <span class="keyword">new</span> Outer();</span><br><span class="line">        Inner in = o.<span class="function">new <span class="title">Inner</span><span class="params">()</span></span>;</span><br><span class="line">        in.show();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>Inner 类定义在 Outer 类的内部，相当于 Outer 类的一个成员变量的位置，Inner 类可以使用任意访问控制符，如 public 、 protected 、 private 等。</p>
-<p>Inner 类中定义的 show() 方法可以直接访问 Outer 类中的数据，而不受访问控制符的影响，如直接访问 Outer 类中的私有属性age。</p>
-<p>定义了成员内部类后，必须使用外部类对象来创建内部类对象，而不能直接去 new 一个内部类对象，即：内部类 对象名 = 外部类对象.new 内部类( ); 。</p>
-<p>编译上面的程序后，会发现产生了两个 .class 文件: Outer.class,Outer$Inner.class{}</p>
-<p>成员内部类中不能存在任何 static 的变量和方法,可以定义常量: 1. 因为非静态内部类是要依赖于外部类的实例,而静态变量和方法是不依赖于对象的,仅与类相关,简而言之:在加载静态域时,根本没有外部类,所在在非静态内部类中不能定义静态域或方法,编译不通过;非静态内部类的作用域是实例级别 2. 常量是在编译器就确定的,放到所谓的常量池了。静态内部类可以有静态成员(方法，属性)，而非静态内部类则不能有静态成员(方法，属性)。</p>
-<p>友情提示：1.外部类是不能直接使用内部类的成员和方法的，可先创建内部类的对象，然后通过内部类的对象来访问其成员变量和方法;2.如果外部类和内部类具有相同的成员变量或方法，内部类默认访问自己的成员变量或方法，如果要访问外部类的成员变量，可以使用 this 关键字,如:Outer.this.name。</p>
-<h1 id="2-静态内部类"><a href="#2-静态内部类" class="headerlink" title="2. 静态内部类"></a>2. 静态内部类</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Outer</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age = <span class="number">99</span>;</span><br><span class="line">    <span class="keyword">static</span> String name = <span class="string">&quot;Coco&quot;</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Inner</span></span>&#123;</span><br><span class="line">        String name = <span class="string">&quot;Jayden&quot;</span>;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">show</span><span class="params">()</span></span>&#123;</span><br><span class="line">            System.out.println(Outer.name);</span><br><span class="line">            System.out.println(name);                  </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        Inner i = <span class="keyword">new</span> Inner();</span><br><span class="line">        i.show();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>静态内部类不能直接访问外部类的非静态成员，但可以通过 new 外部类().成员 的方式访问。如果外部类的静态成员与内部类的成员名称相同，可通过“类名.静态成员”访问外部类的静态成员；如果外部类的静态成员与内部类的成员名称不相同，则可通过“成员名”直接调用外部类的静态成员。</p>
-<p>创建静态内部类的对象时，不需要外部类的对象，可以直接创建 内部类 对象名 = new 内部类();</p>
-<h1 id="3-方法内部类"><a href="#3-方法内部类" class="headerlink" title="3. 方法内部类"></a>3. 方法内部类</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">使用的形参为何要为 final???在内部类中的属性和外部方法的参数两者从外表上看是同一个东西，但实际上却不是，所以他们两者是可以任意变化的，也就是说在内部类中我对属性的改变并不会影响到外部的形参，而然这从程序员的角度来看这是不可行的，毕竟站在程序的角度来看这两个根本就是同一个，如果内部类该变了，而外部方法的形参却没有改变这是难以理解和不可接受的，所以为了保持参数的一致性，就规定使用 final 来避免形参的不改变</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Outer</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Show</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">int</span> a = <span class="number">25</span>;</span><br><span class="line">        <span class="keyword">int</span> b = <span class="number">13</span>;</span><br><span class="line">        <span class="class"><span class="keyword">class</span> <span class="title">Inner</span></span>&#123;</span><br><span class="line">            <span class="keyword">int</span> c = <span class="number">2</span>;</span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span></span>&#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;访问外部类:&quot;</span> + a);</span><br><span class="line">                System.out.println(<span class="string">&quot;访问内部类:&quot;</span> + c);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        Inner i = <span class="keyword">new</span> Inner();</span><br><span class="line">        i.print();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        Outer o = <span class="keyword">new</span> Outer();</span><br><span class="line">        o.show();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>局部内部类就像是方法里面的一个局部变量一样，是不能有 public、protected、private 以及 static 修饰符的。只能访问方法中定义的 final 类型的局部变量，当方法被调用运行完毕之后，局部变量就已消亡了。但内部类对象可能还存在,直到没有被引用时才会消亡。此时就会出现一种情况，就是内部类要访问一个不存在的局部变量;而使用final修饰符不仅会保持对象的引用不会改变,而且编译器还会持续维护这个对象在回调方法中的生命周期。局部内部类并不是直接调用方法传进来的参数，而是内部类将传进来的参数通过自己的构造器备份到了自己的内部，自己内部的方法调用的实际是自己的属性而不是外部类方法的参数;防止被篡改数据,而导致内部类得到的值不一致。</p>
-<h1 id="4-匿名内部类"><a href="#4-匿名内部类" class="headerlink" title="4. 匿名内部类"></a>4. 匿名内部类</h1><p>使用匿名内部类我们必须要继承一个父类或者实现一个接口，当然也仅能只继承一个父类或者实现一个接口；同时它没有class关键字，这是因为匿名内部类是直接使用 new 来生成一个对象的引用，当然这个引用是隐式的。</p>
-<p>对于匿名内部类的使用存在一个缺陷，即它仅能被使用一次，创建匿名内部类时它会立即创建一个该类的实例，该类的定义会立即消失，所以匿名内部类是不能够被重复使用。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OuterClass</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> InnerClass <span class="title">getInnerClass</span><span class="params">(<span class="keyword">final</span> <span class="keyword">int</span>   num,String str2)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> InnerClass()&#123;</span><br><span class="line">            <span class="keyword">int</span> number = num + <span class="number">3</span>;</span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getNumber</span><span class="params">()</span></span>&#123;</span><br><span class="line">                <span class="keyword">return</span> number;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;        <span class="comment">/* 注意：分号不能省 */</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        OuterClass out = <span class="keyword">new</span> OuterClass();</span><br><span class="line">        InnerClass inner = out.getInnerClass(<span class="number">2</span>, <span class="string">&quot;chenssy&quot;</span>);</span><br><span class="line">        System.out.println(inner.getNumber());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">InnerClass</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">getNumber</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="4-1-注意事项"><a href="#4-1-注意事项" class="headerlink" title="4.1. 注意事项"></a>4.1. 注意事项</h2><p>1 使用匿名内部类时，我们必须是继承一个类或者实现一个接口，但是两者不可兼得，同时也只能继承一个类或者实现一个接口。<br>2 匿名内部类中是不能定义构造函数的。<br>3 匿名内部类中不能存在任何的静态成员变量和静态方法。<br>4 匿名内部类为局部内部类，所以局部内部类的所有限制同样对匿名内部类生效。<br>5 匿名内部类不能是抽象的，它必须要实现继承的类或者实现的接口的所有抽象方法。</p>
-<h2 id="4-2-使用的形参为什么要final修饰"><a href="#4-2-使用的形参为什么要final修饰" class="headerlink" title="4.2. 使用的形参为什么要final修饰"></a>4.2. 使用的形参为什么要final修饰</h2><p>在内部类中的属性和外部方法的参数两者从外表上看是同一个东西，但实际上却不是，内部类并不是直接调用方法传递的参数，而是利用自身的构造器对传入的参数进行备份，自己内部方法调用的实际上时自己的属性而不是外部方法传递进来的参数，所以他们两者是可以任意变化的</p>
-<p>也就是说在内部类中对属性的改变并不会影响到外部的形参，然而这从程序员的角度来看这是不可行的，毕竟站在程序的角度来看这两个根本就是同一个，如果内部类该变了而外部方法的形参却没有改变这是难以理解和不可接受的，所以为了保持参数的一致性，就规定使用final来避免形参的不改变。</p>
-<p>简单理解就是，拷贝引用，为了避免引用值发生改变，例如被外部类的方法修改等，而导致内部类得到的值不一致，于是用final来让该引用不可改变。故如果定义了一个匿名内部类，并且希望它使用一个其外部定义的参数，那么编译器会要求该参数引用是final的。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/iBlogWebsite/page/2/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/iBlogWebsite/">1</a><a class="page-number" href="/iBlogWebsite/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/iBlogWebsite/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/iBlogWebsite/page/12/">12</a><a class="extend next" rel="next" href="/iBlogWebsite/page/4/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/iBlogWebsite/page/2/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/iBlogWebsite/">1</a><a class="page-number" href="/iBlogWebsite/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/iBlogWebsite/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/iBlogWebsite/page/13/">13</a><a class="extend next" rel="next" href="/iBlogWebsite/page/4/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -1378,7 +1368,7 @@ List&lt;String&gt;能否转为List&lt;Object&gt;：不能，关键原因在于�
       <div class="site-state-item site-state-posts">
           <a href="/iBlogWebsite/archives/">
         
-          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-count">121</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -1391,7 +1381,7 @@ List&lt;String&gt;能否转为List&lt;Object&gt;：不能，关键原因在于�
       <div class="site-state-item site-state-tags">
             <a href="/iBlogWebsite/tags/">
           
-        <span class="site-state-item-count">86</span>
+        <span class="site-state-item-count">87</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>

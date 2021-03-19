@@ -183,6 +183,95 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://leeeyou.github.io/iBlogWebsite/2018/12/12/2018/2018-12-12-Kotlin%E6%89%A9%E5%B1%95%E4%B9%8B%E5%8D%8F%E7%A8%8B%E7%AF%87/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars1.githubusercontent.com/u/6735624?s=460&v=4">
+      <meta itemprop="name" content="Leeeyou">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Leeeyou123">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/iBlogWebsite/2018/12/12/2018/2018-12-12-Kotlin%E6%89%A9%E5%B1%95%E4%B9%8B%E5%8D%8F%E7%A8%8B%E7%AF%87/" class="post-title-link" itemprop="url">Kotlin扩展之协程篇</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-12-12 00:00:00" itemprop="dateCreated datePublished" datetime="2018-12-12T00:00:00+08:00">2018-12-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-03-09 10:21:37" itemprop="dateModified" datetime="2021-03-09T10:21:37+08:00">2021-03-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/iBlogWebsite/categories/code/" itemprop="url" rel="index"><span itemprop="name">code</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="1-协程是什么"><a href="#1-协程是什么" class="headerlink" title="1. 协程是什么"></a>1. 协程是什么</h1><p>协程可以看做是更“轻量级的线程”，占用资源比线程少，可避免因线程切换而带来的CPU浪费，从而提高程序的运行效率。</p>
+<p>协程可以做到可被控制的发起子任务，在协程中，某段代码可以暂停，转而去执行另外的协程代码；被暂停的代码也可以在你的控制下随时恢复运行。</p>
+<p>在Kotlin中，使多任务或多线程切换不再使用回调语法，避免回调地狱。</p>
+<h1 id="2-Kotlin中怎样启动协程"><a href="#2-Kotlin中怎样启动协程" class="headerlink" title="2. Kotlin中怎样启动协程"></a>2. Kotlin中怎样启动协程</h1><ul>
+<li>launch：不会阻塞当前线程。</li>
+<li>runBlocking：将会阻塞当前线程，直到这段协程代码执行结束才会运行后续代码。</li>
+<li>async/await：用同步的方式发起异步网络请求。</li>
+</ul>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> kotlinx.coroutines.*</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">    <span class="comment">//launch: Will not block the current thread</span></span><br><span class="line">    GlobalScope.launch &#123;</span><br><span class="line">        <span class="comment">// launch new coroutine in background and continue</span></span><br><span class="line">        delay(<span class="number">1000L</span>)</span><br><span class="line">        println(<span class="string">&quot;World!&quot;</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    println(<span class="string">&quot;Hello,&quot;</span>) <span class="comment">// main thread continues here immediately</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//runBlocking: Will wait for the end of the code execution of the coroutine, and then execute the rest of the code</span></span><br><span class="line">    runBlocking &#123;</span><br><span class="line">        <span class="comment">// but this expression blocks the main thread</span></span><br><span class="line">        delay(<span class="number">200L</span>)</span><br><span class="line">        println(<span class="string">&quot;.....&quot;</span>)</span><br><span class="line">        delay(<span class="number">1500L</span>)  <span class="comment">// ... while we delay for 2 seconds to keep JVM alive</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    println(<span class="string">&quot;I&#x27;m coming&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/iBlogWebsite/2018/12/12/2018/2018-12-12-Kotlin%E6%89%A9%E5%B1%95%E4%B9%8B%E5%8D%8F%E7%A8%8B%E7%AF%87/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://leeeyou.github.io/iBlogWebsite/2018/11/27/2018/2018-11-27-Android%E4%B8%AD%E7%9A%84%E7%AD%BE%E5%90%8D%E6%9C%BA%E5%88%B6%EF%BC%8C%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1052,96 +1141,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://leeeyou.github.io/iBlogWebsite/2018/09/25/2018/2018-09-25-JVM%E7%B3%BB%E5%88%97%E4%B9%8BGC-Part2%E6%94%B6%E9%9B%86%E5%99%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://avatars1.githubusercontent.com/u/6735624?s=460&v=4">
-      <meta itemprop="name" content="Leeeyou">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Leeeyou123">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/iBlogWebsite/2018/09/25/2018/2018-09-25-JVM%E7%B3%BB%E5%88%97%E4%B9%8BGC-Part2%E6%94%B6%E9%9B%86%E5%99%A8/" class="post-title-link" itemprop="url">JVM系列之GC-Part2收集器</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2018-09-25 16:47:22" itemprop="dateCreated datePublished" datetime="2018-09-25T16:47:22+08:00">2018-09-25</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-03-12 10:32:04" itemprop="dateModified" datetime="2021-03-12T10:32:04+08:00">2021-03-12</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/iBlogWebsite/categories/code/" itemprop="url" rel="index"><span itemprop="name">code</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>如果说收集算法是内存回收的方法论，那么垃圾收集器就是内存回收的具体实现。下图展示了7中作用于不同分代的收集器，如果两个收集器之间存在连线，就说明他们可以搭配使用。虚拟机所在的区域，则表示它是属于新生代收集器还是老年代收集器。</p>
-<p><img src="https://github.com/Leeeyou/blog/blob/master/images/2018/code/jvm-gc-garbage-collector.png?raw=true" alt="jvm-gc-garbage-collector"></p>
-<p>虽然我们是在对各个收集器进行比较，但并非为了挑选一个最好的收集器。因为直到现在为止还没有最好的收集器出现，更加没有万能的收集器，所以我们选择的只是对具体应用最合适的收集器。这点不需要更多解释就能证明：如果有一个放之四海皆准、任何场景下都适用的完美收集器存在，那么Hotspot虚拟机就没有必要实现那么多不同的收集器了。</p>
-<h1 id="1-Serial-收集器"><a href="#1-Serial-收集器" class="headerlink" title="1. Serial 收集器"></a>1. Serial 收集器</h1><p>Serial 收集器是最基本、发展历史最悠久的收集器。<strong>这个收集器是一个单线程的收集器，</strong> 但它的单线程意义并不仅仅说明它只会使用一个CPU或一条收集线程去完成垃圾收集工作，<strong>更重要的是它进行垃圾收集时，必须暂停其他所有的工作线程，直到它收集结束。</strong> “Stop the world” 这个名字也许听起来很酷，但这项工作实际上是由虚拟机在后台自动发起和自动完成的，在用户不可见的情况下把用户正常的线程全部停掉，这对很多应用来说都是难以接受的。</p>
-<p>从JDK1.3开始一直到JDK1.7，Hotspot虚拟机开发团队为消除或者减少工作线程因内存回收而导致停顿的努力一直在进行着，从Serial收集器到Parallel收集器，再到Concurrent Mark Sweep（CMS）乃至GC收集器的最前沿成果Garbage First（G1）收集器，我们看到一个越来越优秀、也越来越复杂的收集器出现，用户线程的停顿时间在不断缩短，但是仍然没有办法完全消除。寻找更优秀的垃圾收集器的工作仍在继续！</p>
-<p>尽管如此，Serial收集器依然是虚拟机运行在Client模式下的默认新生代收集器。它也有着由于其他收集器的地方：简单而高效，对于限定单个CPU的环境来说，Serial收集器由于没有线程交互的开销，专心做垃圾收集自然可以获得更高的单线程收集效率。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/iBlogWebsite/2018/09/25/2018/2018-09-25-JVM%E7%B3%BB%E5%88%97%E4%B9%8BGC-Part2%E6%94%B6%E9%9B%86%E5%99%A8/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/iBlogWebsite/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/iBlogWebsite/">1</a><span class="page-number current">2</span><a class="page-number" href="/iBlogWebsite/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/iBlogWebsite/page/12/">12</a><a class="extend next" rel="next" href="/iBlogWebsite/page/3/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/iBlogWebsite/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/iBlogWebsite/">1</a><span class="page-number current">2</span><a class="page-number" href="/iBlogWebsite/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/iBlogWebsite/page/13/">13</a><a class="extend next" rel="next" href="/iBlogWebsite/page/3/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -1209,7 +1212,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/iBlogWebsite/archives/">
         
-          <span class="site-state-item-count">120</span>
+          <span class="site-state-item-count">121</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -1222,7 +1225,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/iBlogWebsite/tags/">
           
-        <span class="site-state-item-count">86</span>
+        <span class="site-state-item-count">87</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
