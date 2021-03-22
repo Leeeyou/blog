@@ -206,10 +206,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2021-03-19 00:00:00 / Modified: 20:36:25" itemprop="dateCreated datePublished" datetime="2021-03-19T00:00:00+08:00">2021-03-19</time>
+              <time title="Created: 2021-03-19 00:00:00" itemprop="dateCreated datePublished" datetime="2021-03-19T00:00:00+08:00">2021-03-19</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-03-22 10:00:12" itemprop="dateModified" datetime="2021-03-22T10:00:12+08:00">2021-03-22</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -231,7 +237,26 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="1-新建仓库"><a href="#1-新建仓库" class="headerlink" title="1. 新建仓库"></a>1. 新建仓库</h1><h2 id="1-1-在当前目录新建一个git代码库"><a href="#1-1-在当前目录新建一个git代码库" class="headerlink" title="1.1 在当前目录新建一个git代码库"></a>1.1 在当前目录新建一个git代码库</h2><p>git init</p>
+          <h1 id="0-基础linux命令"><a href="#0-基础linux命令" class="headerlink" title="0. 基础linux命令"></a>0. 基础linux命令</h1><h2 id="0-1-清除屏幕"><a href="#0-1-清除屏幕" class="headerlink" title="0.1 清除屏幕"></a>0.1 清除屏幕</h2><p>clear</p>
+<h2 id="往控制台输出信息"><a href="#往控制台输出信息" class="headerlink" title="往控制台输出信息"></a>往控制台输出信息</h2><p>echo ‘test content’<br>echo ‘test content’ &gt; test.txt</p>
+<h2 id="查看当前处在哪个目录下"><a href="#查看当前处在哪个目录下" class="headerlink" title="查看当前处在哪个目录下"></a>查看当前处在哪个目录下</h2><p>pwd</p>
+<h2 id="将当前目录下的自文件-amp-子目录平铺在控制台"><a href="#将当前目录下的自文件-amp-子目录平铺在控制台" class="headerlink" title="将当前目录下的自文件&amp;子目录平铺在控制台"></a>将当前目录下的自文件&amp;子目录平铺在控制台</h2><p>ls<br>ls -ll</p>
+<h2 id="将对应目录下的子孙文件-amp-子孙目录平铺在控制台"><a href="#将对应目录下的子孙文件-amp-子孙目录平铺在控制台" class="headerlink" title="将对应目录下的子孙文件&amp;子孙目录平铺在控制台"></a>将对应目录下的子孙文件&amp;子孙目录平铺在控制台</h2><p>find [目录名]</p>
+<h2 id="将对应目录下的文件平铺在控制台"><a href="#将对应目录下的文件平铺在控制台" class="headerlink" title="将对应目录下的文件平铺在控制台"></a>将对应目录下的文件平铺在控制台</h2><p>find [目录名] -typef</p>
+<h2 id="删除文件"><a href="#删除文件" class="headerlink" title="删除文件"></a>删除文件</h2><p>rm [文件名]</p>
+<h2 id="重命名"><a href="#重命名" class="headerlink" title="重命名"></a>重命名</h2><p>mv [源文件] [重命名文件]</p>
+<h2 id="查看对应文件的内容"><a href="#查看对应文件的内容" class="headerlink" title="查看对应文件的内容"></a>查看对应文件的内容</h2><p>cat [文件的url]</p>
+<h2 id="编辑文件"><a href="#编辑文件" class="headerlink" title="编辑文件"></a>编辑文件</h2><p>vim [文件的url]</p>
+<ul>
+<li>按i键进入插入模式</li>
+<li>按esc键进行命令执行<ul>
+<li>q! 强制退出(不保存)</li>
+<li>wq 保存退出</li>
+<li>set nu 设置行号</li>
+</ul>
+</li>
+</ul>
+<h1 id="1-新建仓库"><a href="#1-新建仓库" class="headerlink" title="1. 新建仓库"></a>1. 新建仓库</h1><h2 id="1-1-在当前目录新建一个git代码库"><a href="#1-1-在当前目录新建一个git代码库" class="headerlink" title="1.1 在当前目录新建一个git代码库"></a>1.1 在当前目录新建一个git代码库</h2><p>git init</p>
 <h2 id="1-2-新建一个目录，将其初始化为git代码库"><a href="#1-2-新建一个目录，将其初始化为git代码库" class="headerlink" title="1.2 新建一个目录，将其初始化为git代码库"></a>1.2 新建一个目录，将其初始化为git代码库</h2><p>git init [project-name]</p>
 <h2 id="1-3-下载一个项目和它到整个代码历史"><a href="#1-3-下载一个项目和它到整个代码历史" class="headerlink" title="1.3 下载一个项目和它到整个代码历史"></a>1.3 下载一个项目和它到整个代码历史</h2><p>git clone [url]</p>
 <h1 id="2-配置"><a href="#2-配置" class="headerlink" title="2. 配置"></a>2. 配置</h1><h2 id="2-1-显示当前的git配置"><a href="#2-1-显示当前的git配置" class="headerlink" title="2.1 显示当前的git配置"></a>2.1 显示当前的git配置</h2><p>git config –list</p>
