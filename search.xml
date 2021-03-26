@@ -4369,7 +4369,7 @@ List&lt;String&gt;能否转为List&lt;Object&gt;：不能，关键原因在于�
 </tr>
 <tr>
 <td>上传本地指定分支到远程仓库</td>
-<td>git push [remote] [branch] <br> git push origin HEAD:[current_branch_name]</td>
+<td>git push [remote] [branch] <br> git push [remote] HEAD:[current_branch_name]</td>
 </tr>
 <tr>
 <td>强行推送当前分支到远程仓库，即使有冲突</td>
