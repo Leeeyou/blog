@@ -4197,7 +4197,7 @@ List&lt;String&gt;能否转为List&lt;Object&gt;：不能，关键原因在于�
 </tr>
 <tr>
 <td>新建一个分支，并切换到该分支</td>
-<td>git checkout [branch] [commit]</td>
+<td>git checkout -b [branch] [commit]</td>
 </tr>
 <tr>
 <td>切换到指定分支，并更新工作区</td>
@@ -4294,6 +4294,14 @@ List&lt;String&gt;能否转为List&lt;Object&gt;：不能，关键原因在于�
 <tr>
 <td>显示commit历史以及每次commit发生变更的文件</td>
 <td>git log --stat</td>
+</tr>
+<tr>
+<td>查看远程分支的日志 ｜ git log remotes/origin/[branchName]</td>
+<td></td>
+</tr>
+<tr>
+<td>以图表形式显示分支和提交信息</td>
+<td>git log --all --decorate --oneline --graph</td>
 </tr>
 <tr>
 <td>根据关键词搜索提交历史</td>
