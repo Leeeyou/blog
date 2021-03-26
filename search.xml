@@ -4165,11 +4165,11 @@ List&lt;String&gt;能否转为List&lt;Object&gt;：不能，关键原因在于�
 </tr>
 <tr>
 <td>使用一次新的commit替代上一次提交 <br> 如果代码没任何变化，则用来改写上一次commit的提交信息</td>
-<td>git commit -amend <br> git commit -amend -m [message]</td>
+<td>git commit --amend <br> git commit --amend -m [message]</td>
 </tr>
 <tr>
 <td>重做上一次commit，并包括指定文件的新变化</td>
-<td>git commit -amend [file1] [file2] …</td>
+<td>git commit --amend [file1] [file2] …</td>
 </tr>
 </tbody></table>
 <h1 id="6-分支"><a href="#6-分支" class="headerlink" title="6. 分支"></a>6. 分支</h1><table>
@@ -4288,7 +4288,7 @@ List&lt;String&gt;能否转为List&lt;Object&gt;：不能，关键原因在于�
 <td>git log</td>
 </tr>
 <tr>
-<td>reflog是HEAD所指向的一个顺序提交列表（即它的undo历史）<br> reflog不遍历HEAD的祖先</td>
+<td>查看HEAD所指向的一个顺序提交列表 <br> reflog不遍历HEAD的祖先</td>
 <td>git reflog</td>
 </tr>
 <tr>
@@ -4296,8 +4296,8 @@ List&lt;String&gt;能否转为List&lt;Object&gt;：不能，关键原因在于�
 <td>git log --stat</td>
 </tr>
 <tr>
-<td>查看远程分支的日志 ｜ git log remotes/origin/[branchName]</td>
-<td></td>
+<td>查看远程分支的日志</td>
+<td>git log remotes/origin/[branchName]</td>
 </tr>
 <tr>
 <td>以图表形式显示分支和提交信息</td>
@@ -4369,7 +4369,7 @@ List&lt;String&gt;能否转为List&lt;Object&gt;：不能，关键原因在于�
 </tr>
 <tr>
 <td>上传本地指定分支到远程仓库</td>
-<td>git push [remote] [branch]</td>
+<td>git push [remote] [branch] <br> git push origin HEAD:[current_branch_name]</td>
 </tr>
 <tr>
 <td>强行推送当前分支到远程仓库，即使有冲突</td>
