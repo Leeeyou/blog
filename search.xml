@@ -3452,7 +3452,7 @@ List&lt;String&gt;能否转为List&lt;Object&gt;：不能，关键原因在于�
 <li>空间整合</li>
 <li>可预测的停顿：这是G1相对于CMS的另一大优势，降低停顿时间是G1和CMS共同的关注点，但G1除了追求低停顿外，还能建立可预测的停顿时间模型，能让使用者明确指定在一个长度为M毫秒的时间片段内，消耗在垃圾收集上的时间不得超过N毫秒，这几乎已经是实时Java（RTSJ）的垃圾收集器的特征了。</li>
 </ul>
-<p>在G1之前的其他收集器进行收集的范围都是整个新生代或者老年代，而Gl不再是这样。使用G 1时，Java堆的内存布局就与其他收集器有很大差别，它将整个Java堆划分为多个大小相等的独立区城(Region)，虽然还保留有新生代和老年代的概念，但新生代和老年代不再是物理隔离的了，它们都是一部分Region（不需要连续）的集合。</p>
+<p>在G1之前的其他收集器进行收集的范围都是整个新生代或者老年代，而Gl不再是这样。使用G1时，Java堆的内存布局就与其他收集器有很大差别，它将整个Java堆划分为多个大小相等的独立区城(Region)，虽然还保留有新生代和老年代的概念，但新生代和老年代不再是物理隔离的了，它们都是一部分Region（不需要连续）的集合。</p>
 <p>在G1收集器中，Region之间的对象引用以及其他收集器中的新生代与老年代之间的对象引用,虚拟机都是使用Remembered Set来避免全堆扫描的。G1中每个Region都有一个与之对应的Remembered Set，虚拟机发现程序在对Reference类型的数据进行写操作时，会产生一个Write Barrier暂时中断写操作，检查Reference引用的对象是否处于不同的Region之中（在分代的例子中就是检查是否老年代中的对象引用了新生代中的对象），如果是，便通过CardTable把相关引用信息记录到被引用对象所属的Region的Remembered Set之中。当进行内存回收时，在GC根节点的枚举范围中加人Remembered Set即可保证不对全堆扫描也不会有遗漏。</p>
 <p>G1收集器的运作大致分为以下4个步骤：</p>
 <ul>
@@ -3482,7 +3482,7 @@ List&lt;String&gt;能否转为List&lt;Object&gt;：不能，关键原因在于�
     <content><![CDATA[<p>这里谈论的GC分类主要是理清楚在各分代中会发生什么GC以及其作用是什么。</p>
 <p>新生代GC（Minor GC）：指发生在新生代的垃圾收集动作，因为Java对象大多都具备朝生夕灭的特性，所以Minor GC非常频繁，一般回收速度也比较快。</p>
 <p>老年代GC（Major GC / Full GC）：指发生在老年代的GC，出现了Major GC，经常会伴随至少一次的Minor GC（但非绝对的，在Parallel Scavenge收集器的收集策略里就有直接进行Major GC的策略选择过程）。Major GC的速度一般会比Minor GC慢10倍以上。</p>
-<p>我们可以认为Major GC == Full GC，它们是一个概念，就是针对 老年代/永久代 进行GC。因为取名叫Full就会让人疑惑，到底会不会先Minor GC。事实上Full GC本身不会先进行Minor GC，我们可以配置，让Full GC之前先进行一次Minor GC，因为老年代很多对象都会引用到新生代的对象，先进行一次Minor GC可以提高老年代GC的速度。比如老年代使用CMS时，设置CMSScavengeBeforeRemark优化，让CMS remark之前先进行一次Minor GC。</p>
+<p>我们可以认为Major GC == Full GC，它们是一个概念，就是针对[老年代/永久代]进行GC。因为取名叫Full就会让人疑惑，到底会不会先Minor GC。事实上Full GC本身不会先进行Minor GC，我们可以配置，让Full GC之前先进行一次Minor GC，因为老年代很多对象都会引用到新生代的对象，先进行一次Minor GC可以提高老年代GC的速度。比如老年代使用CMS时，设置CMSScavengeBeforeRemark优化，让CMS remark之前先进行一次Minor GC。</p>
 <p>弄清楚了Full GC本意单纯就是针对老年代了之后，我们再进一步深入理解Full GC的含义。上篇文章介绍过，因为CMS主要可以分为initial mark(stop the world), concurrent mark, remark(stop the world), concurrent sweep几个阶段，其中initial mark和remark会stop the world。Full GC的次数和时间等同于老年代GC时 stop the world的次数和时间。</p>
 <hr>
 <p>参考： </p>

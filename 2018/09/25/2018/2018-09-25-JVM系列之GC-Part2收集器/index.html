@@ -29,7 +29,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://github.com/Leeeyou/blog/blob/master/images/2018/code/jvm-gc-garbage-collector.png?raw=true">
 <meta property="article:published_time" content="2018-09-25T08:47:22.000Z">
-<meta property="article:modified_time" content="2021-03-12T02:32:04.393Z">
+<meta property="article:modified_time" content="2021-03-29T01:29:00.349Z">
 <meta property="article:author" content="Leeeyou">
 <meta property="article:tag" content="JVM">
 <meta property="article:tag" content="GC">
@@ -222,7 +222,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-03-12 10:32:04" itemprop="dateModified" datetime="2021-03-12T10:32:04+08:00">2021-03-12</time>
+                <time title="Modified: 2021-03-29 09:29:00" itemprop="dateModified" datetime="2021-03-29T09:29:00+08:00">2021-03-29</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -287,7 +287,7 @@
 <li>空间整合</li>
 <li>可预测的停顿：这是G1相对于CMS的另一大优势，降低停顿时间是G1和CMS共同的关注点，但G1除了追求低停顿外，还能建立可预测的停顿时间模型，能让使用者明确指定在一个长度为M毫秒的时间片段内，消耗在垃圾收集上的时间不得超过N毫秒，这几乎已经是实时Java（RTSJ）的垃圾收集器的特征了。</li>
 </ul>
-<p>在G1之前的其他收集器进行收集的范围都是整个新生代或者老年代，而Gl不再是这样。使用G 1时，Java堆的内存布局就与其他收集器有很大差别，它将整个Java堆划分为多个大小相等的独立区城(Region)，虽然还保留有新生代和老年代的概念，但新生代和老年代不再是物理隔离的了，它们都是一部分Region（不需要连续）的集合。</p>
+<p>在G1之前的其他收集器进行收集的范围都是整个新生代或者老年代，而Gl不再是这样。使用G1时，Java堆的内存布局就与其他收集器有很大差别，它将整个Java堆划分为多个大小相等的独立区城(Region)，虽然还保留有新生代和老年代的概念，但新生代和老年代不再是物理隔离的了，它们都是一部分Region（不需要连续）的集合。</p>
 <p>在G1收集器中，Region之间的对象引用以及其他收集器中的新生代与老年代之间的对象引用,虚拟机都是使用Remembered Set来避免全堆扫描的。G1中每个Region都有一个与之对应的Remembered Set，虚拟机发现程序在对Reference类型的数据进行写操作时，会产生一个Write Barrier暂时中断写操作，检查Reference引用的对象是否处于不同的Region之中（在分代的例子中就是检查是否老年代中的对象引用了新生代中的对象），如果是，便通过CardTable把相关引用信息记录到被引用对象所属的Region的Remembered Set之中。当进行内存回收时，在GC根节点的枚举范围中加人Remembered Set即可保证不对全堆扫描也不会有遗漏。</p>
 <p>G1收集器的运作大致分为以下4个步骤：</p>
 <ul>
