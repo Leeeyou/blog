@@ -30,7 +30,7 @@
 <meta property="og:image" content="https://github.com/Leeeyou/blog/blob/master/images/2018/code/jvm-class-loader-basic-organization-structure-of-class-file.png?raw=true">
 <meta property="og:image" content="https://github.com/Leeeyou/blog/blob/master/images/2018/code/jvm-class-loader-general-structure-of-the-attribute-table.png?raw=true">
 <meta property="article:published_time" content="2018-09-27T01:38:41.000Z">
-<meta property="article:modified_time" content="2021-03-29T12:58:36.905Z">
+<meta property="article:modified_time" content="2021-03-29T13:11:44.739Z">
 <meta property="article:author" content="Leeeyou">
 <meta property="article:tag" content="JVM">
 <meta property="article:tag" content="类加载">
@@ -223,7 +223,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-03-29 20:58:36" itemprop="dateModified" datetime="2021-03-29T20:58:36+08:00">2021-03-29</time>
+                <time title="Modified: 2021-03-29 21:11:44" itemprop="dateModified" datetime="2021-03-29T21:11:44+08:00">2021-03-29</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -595,7 +595,7 @@
 <p>很明显，在实际情况中，ACC_PUBLIC、ACC_PRIVATE、ACC_PROTECTED三个标志做多只能选择其一，ACC_FINAL、ACC_VOLATILE不能同时选择。接口之中的字段必须有ACC_PUBLIC、ACC_STATIC、ACC_FINAL标志，这些都是由Java本身的语言规则所决定的。</p>
 <p>跟随access_flags标志的是两项索引值：name_index和descriptor_index。他们都是对常量池的引用，分别代表着字段的简单名称以及字段的方法的描述符。现在需要解释一下“简单名称”、“描述符”以及前面出现过多次的“全限定名”这三种特殊字符串的概念。</p>
 <p>全限定名和简单名称很好理解，例如：“org/fenixsoft/clazz/TestClass”是这个类的全限定名，仅仅是把类全名中的“.”替换成了“/”而已，为了使连续的多个全限定名之间不产生混淆，在使用时最后一般会加入一个“;”表示全限定名结束。简单名称是指没有类型和参数修饰的方法或者字段名称。</p>
-<p>相对于全限定名和简单名称来说，方法和字段的描述符就要复杂一些。描述符的作用是用来描述字段的数据类型、方法的参数列表（包括数量、类型以及顺序）和返回值。根据描述符规则，基本数据类型以及代表无返回值的void类型都用一个大写字符来表示，而对象类型则用字符L加对象的全限定名来表示，如下表所示：</p>
+<p>相对于全限定名和简单名称来说，方法和字段的描述符就要复杂一些。<strong>描述符的作用是用来描述字段的数据类型、方法的参数列表（包括数量、类型以及顺序）和返回值</strong>。根据描述符规则，基本数据类型以及代表无返回值的void类型都用一个大写字符来表示，而对象类型则用字符L加对象的全限定名来表示，如下表所示：</p>
 <table>
 <thead>
 <tr>
@@ -645,7 +645,7 @@
 </tr>
 </tbody></table>
 <p>对于数组类型，每一维度将使用一个前置的“[”字符来描述，如一个定义为“java.lang.String[][]”类型的二维数组，将被记录为：“[[Ljava/lang/String;”，一个整型数组“int[]”将被记录为“[I”。</p>
-<p>用描述符描述方式时，按照先参数列表，后返回值的顺序描述，参数列表按照参数的严格顺序放在一组小括号“()”之内。如方法void add()的描述符为“()V”，方法java.lang.String toString()的描述符为“()Ljava/lang/String;”，方法int indexOf(char[] source,int sourceOffset , int sourceCount , char[] target , int targetOffset , int targetCount , int fromIndex)的描述符为“([CII[CIII)I”。</p>
+<p><strong>用描述符描述方式时，按照先参数列表，后返回值的顺序描述，参数列表按照参数的严格顺序放在一组小括号“()”之内</strong>。如方法void add()的描述符为“()V”，方法java.lang.String toString()的描述符为“()Ljava/lang/String;”，<strong>方法int indexOf(char[] source,int sourceOffset , int sourceCount , char[] target , int targetOffset , int targetCount , int fromIndex)的描述符为“([CII[CIII)I”</strong>。</p>
 <p>字段表集合中不会列出从超类或者父接口中继承而来的字段，但有可能列出原本Java代码之中不存在的字段，譬如在内部类中为了保持对外部类的访问性，会自定添加指向外部类实例的字段。另外，在Java语言中字段是无法重载的，两个字段的数据类型、修饰符不管是否相同，都必须使用不一样的名称，但是对于字节码来讲，如果两个字段的描述符不一致，那字段重名就是合法的。</p>
 <p>关于更详细的关于字段表的介绍和举例，参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/luanlouis/article/details/41046443">《Java虚拟机原理图解》1.4 class文件中的字段表集合–field字段在class文件中是怎样组织的</a></p>
 <h1 id="6-方法表集合"><a href="#6-方法表集合" class="headerlink" title="6. 方法表集合"></a>6. 方法表集合</h1><p>理解了上一节关于字段表的内容，本节关于方法表的内容将会变得很简单。Class文件存储格式中对方法的描述与对字段的描述几乎采用了完全一致的方式，方法表的结构如同字段表一样，依次包括了访问标志（access_flags）、名称索引（name_index）、描述符索引（descriptor_index）、属性表集合（attributes）几项，这些数据项目的含义也非常类似，仅在访问标志和属性表集合的可选项中有所区别。</p>
@@ -754,8 +754,8 @@
 </tr>
 </tbody></table>
 <p>行文至此，或许你会产生疑问：方法的代码放哪？其实方法里的Java代码，经过编译器编译成字节码指令后，存放在方法属性表集合中一个名为“Code”的属性里面，属性表作为Class文件格式中最具扩展性的一种数据项目，将在下一小节介绍。</p>
-<p>与字段表集合相对应的，如果父类方法在子类中没有被重写（Override），方法表集合中就不会出现来自父类的方法信息。但同样的，有可能会出现由编译器自动添加的方法，最典型的便是类构造器“<clinit>”方法和实例构造器“<init>”方法。</p>
-<p>在Java语言中，要重载（Overload）一个方法，除了要与原方法具有相同的简单名称之外，还要求必须拥有一个与原方法不同的特征签名，特征签名就是一个方法中各个参数在常量池中的字段符号引用的集合，也就是因为返回值不会包含在特征签名中，因此Java语言里面是无法仅仅依赖返回值的不同来对一个已有方法进行重载的。但是在Class文件格式中，特征签名的范围更大一些，只要描述符不是完全一致的两个方法也可以共存。也就是说，如果两个方法有相同的名称和特征签名，但返回值不同，那么也是可以合法共存于同一个Class文件中的。</p>
+<p>与字段表集合相对应的，如果父类方法在子类中没有被重写（Override），方法表集合中就不会出现来自父类的方法信息。但同样的，有可能会出现由编译器自动添加的方法，最典型的便是类构造器“&lt;clinit&gt;”方法和实例构造器“&lt;init&gt;”方法。</p>
+<p><strong>在Java语言中，要重载（Overload）一个方法，除了要与原方法具有相同的简单名称之外，还要求必须拥有一个与原方法不同的特征签名，特征签名就是一个方法中各个参数在常量池中的字段符号引用的集合，也就是因为返回值不会包含在特征签名中，因此Java语言里面是无法仅仅依赖返回值的不同来对一个已有方法进行重载的。但是在Class文件格式中，特征签名的范围更大一些，只要描述符不是完全一致的两个方法也可以共存。也就是说，如果两个方法有相同的名称和特征签名，但返回值不同，那么也是可以合法共存于同一个Class文件中的。</strong></p>
 <h1 id="7-属性表集合"><a href="#7-属性表集合" class="headerlink" title="7. 属性表集合"></a>7. 属性表集合</h1><p>属性表（attribute_info）的一般结构如下图所示：</p>
 <p><img src="https://github.com/Leeeyou/blog/blob/master/images/2018/code/jvm-class-loader-general-structure-of-the-attribute-table.png?raw=true" alt="jvm-class-loader-general-structure-of-the-attribute-table"></p>
 <p>在《Java虚拟机规范（第2版）》中预定义了9项虚拟机实现应当能识别的属性，而在最新的《Java虚拟机规范（Java SE7）》版中，预定义属性已经增加到了21项。属性表的内容比较复杂，推荐熟悉Code、ConstantValue、Deprecated和Exceptions即可，其余的项有兴趣可自行扩展。</p>
