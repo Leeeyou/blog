@@ -29,7 +29,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://github.com/Leeeyou/blog/blob/master/images/2018/code/jvm-gc-garbage-collector.png?raw=true">
 <meta property="article:published_time" content="2018-09-25T08:47:22.000Z">
-<meta property="article:modified_time" content="2021-03-29T01:29:00.349Z">
+<meta property="article:modified_time" content="2021-03-29T01:35:12.318Z">
 <meta property="article:author" content="Leeeyou">
 <meta property="article:tag" content="JVM">
 <meta property="article:tag" content="GC">
@@ -222,7 +222,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-03-29 09:29:00" itemprop="dateModified" datetime="2021-03-29T09:29:00+08:00">2021-03-29</time>
+                <time title="Modified: 2021-03-29 09:35:12" itemprop="dateModified" datetime="2021-03-29T09:35:12+08:00">2021-03-29</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -296,7 +296,7 @@
 <li>最终标记</li>
 <li>筛选回收</li>
 </ul>
-<p>同CMS运作过程相似，这里不再细述。由于目前G1成熟版本的发布时间还很短，Gl收集器几乎可以说还没有经过实际应用的考验，网络上关于G1收集器的性能测试也非常贫乏，到目前为止，还没有搜索到有关的生产环境下的性能测试报告。强调 “生产环境下的测试报告” 是因为对于垃圾收集器来说，仅仅通过简单的Java代码写个Microbenchmark程序来创建、移除Java对象，再用-XX:PrintGCDetails等参数来查看GC日志是很难做到准确衡量其性能的。</p>
+<p>同CMS运作过程相似，这里不再细述。由于目前G1成熟版本的发布时间还很短，G1收集器几乎可以说还没有经过实际应用的考验，网络上关于G1收集器的性能测试也非常贫乏，到目前为止，还没有搜索到有关的生产环境下的性能测试报告。强调 “生产环境下的测试报告” 是因为对于垃圾收集器来说，仅仅通过简单的Java代码写个Microbenchmark程序来创建、移除Java对象，再用-XX:PrintGCDetails等参数来查看GC日志是很难做到准确衡量其性能的。</p>
 <hr>
 <p>参考： </p>
 <ol>
