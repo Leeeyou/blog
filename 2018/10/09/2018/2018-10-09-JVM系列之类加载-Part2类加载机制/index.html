@@ -30,7 +30,7 @@
 <meta property="og:image" content="https://github.com/Leeeyou/blog/blob/master/images/2018/code/jvm-class-loader-class-lifecycler.png?raw=true">
 <meta property="og:image" content="https://github.com/Leeeyou/blog/blob/master/images/2018/code/jvm-class-loader-parental-delegation-model.png?raw=true">
 <meta property="article:published_time" content="2018-10-09T01:21:27.000Z">
-<meta property="article:modified_time" content="2021-03-10T06:50:23.533Z">
+<meta property="article:modified_time" content="2021-03-31T11:53:08.115Z">
 <meta property="article:author" content="Leeeyou">
 <meta property="article:tag" content="JVM">
 <meta property="article:tag" content="类加载">
@@ -223,7 +223,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-03-10 14:50:23" itemprop="dateModified" datetime="2021-03-10T14:50:23+08:00">2021-03-10</time>
+                <time title="Modified: 2021-03-31 19:53:08" itemprop="dateModified" datetime="2021-03-31T19:53:08+08:00">2021-03-31</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -249,25 +249,29 @@
         <h1 id="1-类加载的时机"><a href="#1-类加载的时机" class="headerlink" title="1. 类加载的时机"></a>1. 类加载的时机</h1><p>类从被加载到虚拟机内存中开始，到卸载出内存为止，它的整个生命周期包括：加载（Loading）、验证（Verification）、准备（Preparation）、解析（Resolution）、初始化（Initalization）、使用（Using）和卸载（Unloading）7个阶段。其中验证、准备、解析3个部分统称为连接（Linking）。</p>
 <p><img src="https://github.com/Leeeyou/blog/blob/master/images/2018/code/jvm-class-loader-class-lifecycler.png?raw=true" alt="jvm-class-loader-class-lifecycler"></p>
 <p>加载、验证、准备、初始化、卸载这5个阶段的顺序是确定的，类的加载过程必须按照这种顺序按部就班地开始，<strong>而解析阶段则不一定：它在某些情况下可以在初始化阶段之后再开始，这是为了支持Java语言的运行时绑定。</strong></p>
-<p>什么情况下需要开始类加载过程的第一个阶段：加载？Java虚拟机规范中并没有进行强制约束，这点可以交给虚拟机的具体实现来自由把握。但是对于初始化阶段，虚拟机规范则是严格规定了有且只有5中情况必须立即对类进行“初始化”（而加载、验证、准备自然需要在此之前开始）：</p>
+<p>什么情况下需要开始类加载过程的第一个阶段：[加载]吗？Java虚拟机规范中并没有进行强制约束，这点可以交给虚拟机的具体实现来自由把握。但是对于初始化阶段，虚拟机规范则是严格规定了有且只有5种情况必须立即对类进行“初始化”(而加载、验证、准备自然需要在此之前开始)：</p>
 <ul>
-<li>遇到new、getstatic、putstatic或invokestatic这4条字节码指令时，如果类没有进行过初始化，则需要先触发其初始化。生成这4条指令的最常见的Java代码场景是：<strong>使用new关键字实例化对象的时候、读取或设置一个类的静态字段（被final修饰、已在编译期把结果放入常量池的静态字段除外）的时候，以及调用一个类的静态方法的时候。</strong></li>
+<li>遇到new、getstatic、putstatic或invokestatic这4条字节码指令时，如果类没有进行过初始化，则需要先触发其初始化。生成这4条指令最常见的Java代码场景是：<strong>使用new关键字实例化对象的时候、读取或设置一个类的静态字段（被final修饰、已在编译期把结果放入常量池的静态字段除外）的时候，以及调用一个类的静态方法的时候。</strong></li>
 <li>使用java.lang.reflect包的方法对类进行<strong>反射调用的时候</strong>，如果类没有进行过初始化，则需要先触发其初始化。</li>
 <li>当初始化一个类的时候，如果发现其父类还没有进行过初始化，则需要先触发其父类的初始化。</li>
 <li>当虚拟机启动时，用户需要指定一个要执行的主类（包含main()方法的那个类），虚拟机会先初始化这个主类。</li>
 <li>当使用JDK1.7的动态语言支持时，如果一个java.lang.invoke.MethodHandle实例最后的解析结果REF_getStatic、REF_putStatic、REF_invokeStatic的方法句柄，并且这个方法句柄所对应的类没有进行过初始化，则需要先触发其初始化。</li>
 </ul>
-<p><strong>对于这5中会触发类进行初始化的场景，虚拟机规范中使用了一个很强烈的限定语：“有且只有”，这5中场景中的行为称为对一个类进行主动引用。除此之外，所有引用类的方式都不会触发初始化，称为被动引用。</strong></p>
+<p><strong>对于这5种会触发类进行初始化的场景，虚拟机规范中使用了一个很强烈的限定语：“有且只有”，这5中场景中的行为称为对一个类进行主动引用。除此之外，所有引用类的方式都不会触发初始化，称为被动引用。</strong></p>
 <span id="more"></span>
 
 <h1 id="2-类加载的过程"><a href="#2-类加载的过程" class="headerlink" title="2. 类加载的过程"></a>2. 类加载的过程</h1><h2 id="2-1-加载"><a href="#2-1-加载" class="headerlink" title="2.1. 加载"></a>2.1. 加载</h2><p>“加载”是“类加载（Class Loading）”过程的一个阶段，在加载阶段，虚拟机需要完成以下3件事情：</p>
-<p>1、通过一个类的全限定名来获取其定义的二进制字节流。<br>2、将这个字节流所代表的静态存储结构转化为方法区的运行时数据结构。<br>3、在Java堆中生成一个代表这个类的java.lang.Class对象，作为对方法区中这些数据的访问入口。</p>
+<ul>
+<li>通过一个类的全限定名来获取其定义的二进制字节流 <strong>(org/fenixsoft/clazz/TestClass)</strong></li>
+<li>将这个字节流所代表的静态存储结构转化为方法区的运行时数据结构</li>
+<li>在Java堆中生成一个代表这个类的java.lang.Class对象，作为对方法区中这些数据的访问入口</li>
+</ul>
 <h2 id="2-2-验证"><a href="#2-2-验证" class="headerlink" title="2.2. 验证"></a>2.2. 验证</h2><p><strong>验证的目的是为了确保Class文件中的字节流包含的信息符合当前虚拟机的要求，而且不会危害虚拟机自身的安全。</strong> 不同的虚拟机对类验证的实现可能会有所不同，但大致都会完成以下四个阶段的验证：文件格式的验证、元数据的验证、字节码验证和符号引用验证。</p>
 <h3 id="2-2-1-文件格式的验证"><a href="#2-2-1-文件格式的验证" class="headerlink" title="2.2.1. 文件格式的验证"></a>2.2.1. 文件格式的验证</h3><p>验证字节流是否符合Class文件格式的规范，并且能被当前版本的虚拟机处理，该验证的主要目的是保证输入的字节流能正确地解析并存储于方法区之内。经过该阶段的验证后，字节流才会进入内存的方法区中进行存储，后面的三个验证都是基于方法区的存储结构进行的。验证点大致有以下这些：</p>
 <ul>
 <li>是否以魔数0xCAFEBABE开头</li>
 <li>主、次版本号是否在当前虚拟机处理范围之内</li>
-<li>常量池的常量中是否由不被支持的常量类型</li>
+<li>常量池的常量中是否有不被支持的常量类型</li>
 <li>指向常量的各种索引值中是否有指向不存在的常量或不符合类型的常量</li>
 <li>CONSTANT_Utf8_info型的常量中是否有不符合UTF8编码的数据</li>
 <li>Class文件中各个部分及文件本身是否有被删除的或附加的其他信息</li>
@@ -277,7 +281,7 @@
 <li>这个类是否有父类（除了java.lang.Object之外，所有的类都应当有父类）</li>
 <li>这个类的父类是否继承了不允许被继承的类（被final修饰的类）</li>
 <li>如果这个类不是抽象类，是否实现了其父类或接口之中要求实现的所有方法</li>
-<li>类中的字段、方法是否与父类产生矛盾（例如覆盖了父类的final字段，或者出现不符合规则的方法重载，例如方法参数都一直，但返回值类型却不同等）</li>
+<li>类中的字段、方法是否与父类产生矛盾（例如覆盖了父类的final字段，或者出现不符合规则的方法重载，例如方法参数都一致，但返回值类型却不同等）</li>
 </ul>
 <h3 id="2-2-3-字节码验证"><a href="#2-2-3-字节码验证" class="headerlink" title="2.2.3. 字节码验证"></a>2.2.3. 字节码验证</h3><p>该阶段验证的主要工作是进行数据流和控制流分析，对类的方法体进行校验分析，以保证被校验的类的方法在运行时不会做出危害虚拟机安全的行为。</p>
 <h3 id="2-2-4-符号引用验证"><a href="#2-2-4-符号引用验证" class="headerlink" title="2.2.4. 符号引用验证"></a>2.2.4. 符号引用验证</h3><p>这是最后一个阶段的验证，它发生在虚拟机将符号引用转化为直接引用的时候（解析阶段中发生该转化，后面会有讲解），主要是对类自身以外的信息（常量池中的各种符号引用）进行匹配性的校验。符号引用验证的目的是确保解析动作能正常执行，如果无法通过符号引用验证，那么将会抛出一个java.lang.IncompatibleClassChangeError异常的子类，如java.lang.IllegalAccessError、java.lang.NoSuchFieldError、java.lang.NoSuchMethodError等。通常需要校验下列内容：</p>
@@ -286,7 +290,7 @@
 <li>在指定类中是否存在符号方法的字段描述符以及简单名称所描述的方法和字段</li>
 <li>符号引用中的类、字段、方法的访问性是否可被当前类访问</li>
 </ul>
-<h2 id="2-3-准备"><a href="#2-3-准备" class="headerlink" title="2.3. 准备"></a>2.3. 准备</h2><p>准备阶段是正式为类变量分配内存并设置类变量初始值的阶段，这些变量所使用的内存都将在方法区中进行分配。这个阶段中有两个容易产生混淆的概念需要强调一下，首先，这时候进行内存分配的仅包括类变量（被static修饰的变量），而不包括实例变量，实例变量将会在对象实例化时随着对象一起分配在Java堆中。其次，这里所说的初始值“通常情况”下是数据类型的零值。</p>
+<h2 id="2-3-准备"><a href="#2-3-准备" class="headerlink" title="2.3. 准备"></a>2.3. 准备</h2><p><strong>准备阶段是正式为类变量分配内存并设置类变量初始值的阶段</strong>，这些变量所使用的内存都将在方法区中进行分配。这个阶段中有两个容易产生混淆的概念需要强调一下，首先，这时候进行内存分配的仅包括类变量（被static修饰的变量），而不包括实例变量，实例变量将会在对象实例化时随着对象一起分配在Java堆中。其次，这里所说的初始值“通常情况”下是数据类型的零值。</p>
 <p>假设一个类变量的定义为：public static int value = 123;</p>
 <p>那变量value在准备阶段过后的初始值是0而不是123，因为这时候尚未开始执行任何Java方法，而把value赋值为123的putstatic指令是程序被编译后存放于类构造器&lt;clinit&gt;()方法之中，所以把value赋值为123的动作将在初始化阶段才会执行。</p>
 <p>基本数据类型的零值如下表：</p>
@@ -340,7 +344,17 @@
 </li>
 </ul>
 <p>对同一个符号引用进行多次解析请求时很常见的事情，虚拟机实现可能会对第一次解析的结果进行缓存（在运行时常量池中记录直接引用，并把常量标示为已解析状态），从而避免解析动作重复进行。</p>
-<p>解析动作主要针对类或接口、字段、类方法、接口方法、方法类型、方法句柄和调用点限定符7类符号引用进行，分别对应于常量池中的CONSTANT_Class_info、CONSTANT_Fieldref_info、CONSTANT_Methodref_info、CONSTANT_InterfaceMethodref_info、CONSTANT_MethodType_info、CONSTANT_MethodHandle_info和CONSTANT_InvokeDynamic_info7种常量类型。对于后面3中，与JDK1.7新增的动态语言支持息息相关。</p>
+<p>解析动作主要针对类或接口、字段、类方法、接口方法、方法类型、方法句柄和调用点限定符7类符号引用进行，分别对应于常量池中的7种常量类型</p>
+<ul>
+<li>CONSTANT_Class_info</li>
+<li>CONSTANT_Fieldref_info</li>
+<li>CONSTANT_Methodref_info</li>
+<li>CONSTANT_InterfaceMethodref_info</li>
+<li>CONSTANT_MethodType_info</li>
+<li>CONSTANT_MethodHandle_info</li>
+<li>CONSTANT_InvokeDynamic_info</li>
+</ul>
+<p>对于后面3中，与JDK1.7新增的动态语言支持息息相关。</p>
 <h2 id="2-5-初始化"><a href="#2-5-初始化" class="headerlink" title="2.5. 初始化"></a>2.5. 初始化</h2><p>初始化是类加载过程的最后一步，到了此阶段才真正开始执行类中定义的Java程序代码。<strong>在准备阶段类变量已经被赋过一次系统要求的初始值，而在初始化阶段，则是根据程序员通过程序指定的主观计划去初始化类变量和其他资源，或者可以从另一个角度来表达：初始化阶段是执行类构造器&lt;clinit&gt;()方法的过程。</strong></p>
 <p>这里简单说明下&lt;clinit&gt;()方法的执行规则:</p>
 <p>1、&lt;clinit&gt;()方法是由编译器自动收集 <strong>类中的所有类变量的赋值动作和静态语句块中的语句合并产生的，</strong> 编译器收集的顺序是由语句在源文件中 <strong>出现的顺序所决定的，静态语句块中只能访问到定义在静态语句块之前的变量，定义在它之后的变量，在前面的静态语句中可以赋值，但是不能访问。</strong> </p>
@@ -366,11 +380,11 @@
 <p>从Java虚拟机的角度来讲，只存在两种不同的类加载器：一种是启动类加载器，这个类加载器使用C++语言实现，是虚拟机自身的一部分；另一种就是所有其他的类加载器，这些类加载器都由Java语言实现，独立于虚拟机外部，并且全部继承自抽象类java.lang.ClassLoader。</p>
 <p>从Java开发人员的角度来看，类加载器还可以划分得更细致一些，绝大部分Java程序都会使用到以下3中系统提供的类加载器。</p>
 <ol>
-<li><p>启动类加载器（Bootstrap ClassLoader）：这个类加载器负责将存放在&lt;JAVA_HOME&gt;\lib 目录中的，或者被-Xbootclasspath参数所指定的路径中的，并且被虚拟机识别的（仅按照文件名识别，如rt.jar，名字不符合的类库即使放在lib目录中也不会被加载）类库加载到虚拟机内存中。启动类加载器无法被Java程序直接引用，用户在编写自定义类加载器时，如果需要把加载请求委派给引导类加载器，那直接使用null代替即可。</p>
+<li><p>启动类加载器(Bootstrap ClassLoader)：这个类加载器负责将存放在&lt;JAVA_HOME&gt;\lib 目录中的，或者被-Xbootclasspath参数所指定的路径中的，并且被虚拟机识别的（仅按照文件名识别，如rt.jar，名字不符合的类库即使放在lib目录中也不会被加载）类库加载到虚拟机内存中。启动类加载器无法被Java程序直接引用，用户在编写自定义类加载器时，如果需要把加载请求委派给引导类加载器，那直接使用null代替即可。</p>
 </li>
-<li><p>扩展类加载器（Extension ClassLoader）：这个加载器由sun.misc.Launcher$ExtClassLoader实现，它负责加载&lt;JAVA_HOME&gt;\lib\ext 目录中的，或者被java.ext.dirs系统变量所指定的路径中的所有类库，开发者可以直接使用扩展类加载器。</p>
+<li><p>扩展类加载器(Extension ClassLoader)：这个加载器由sun.misc.Launcher$ExtClassLoader实现，它负责加载&lt;JAVA_HOME&gt;\lib\ext 目录中的，或者被java.ext.dirs系统变量所指定的路径中的所有类库，开发者可以直接使用扩展类加载器。</p>
 </li>
-<li><p>应用程序类加载器（Application ClassLoader）：这个类加载器有sun.misc.Launcher$AppClassLoader实现。由于这个类加载器是ClassLoader中的getSystemClassLoader()方法的返回值，所以一般也称为系统类加载器。它负责加载用户类路径（ClassPath）上所指定的类库，开发者可以直接使用这个类加载器，如果应用程序中没有自定义过自己的类加载器，一般情况下这个就是程序中默认的类加载器。下图展示了类加载器的双亲委派模型（Parents Delegation Model）。</p>
+<li><p>应用程序类加载器(Application ClassLoader)：这个类加载器有sun.misc.Launcher$AppClassLoader实现。由于这个类加载器是ClassLoader中的getSystemClassLoader()方法的返回值，所以一般也称为系统类加载器。它负责加载用户类路径（ClassPath）上所指定的类库，开发者可以直接使用这个类加载器，如果应用程序中没有自定义过自己的类加载器，一般情况下这个就是程序中默认的类加载器。下图展示了类加载器的双亲委派模型（Parents Delegation Model）。</p>
 </li>
 </ol>
 <p><img src="https://github.com/Leeeyou/blog/blob/master/images/2018/code/jvm-class-loader-parental-delegation-model.png?raw=true" alt="jvm-class-loader-parental-delegation-model"></p>
