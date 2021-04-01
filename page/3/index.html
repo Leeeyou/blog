@@ -387,7 +387,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-04-01 17:49:24" itemprop="dateModified" datetime="2021-04-01T17:49:24+08:00">2021-04-01</time>
+                <time title="Modified: 2021-04-01 19:51:43" itemprop="dateModified" datetime="2021-04-01T19:51:43+08:00">2021-04-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -430,12 +430,12 @@
 
 <p>有界通配符描述的是<strong>引用了明确的类型</strong>，并不是意味着这个appleList将持有任何类型的Apple，它意味着“appleList引用某种还没有指定具体类型的Apple”。</p>
 <h4 id="2-3-1-1-上界通配符"><a href="#2-3-1-1-上界通配符" class="headerlink" title="2.3.1.1. 上界通配符"></a>2.3.1.1. 上界通配符</h4><p>&lt;? extends T&gt; 表示包括T在内的任何T的子类。如下关系图所示：</p>
-<p><img src="https://raw.githubusercontent.com/Leeeyou/iBlogRawResource/main/source/images/2018/code/java-generic-extend.png?token=ABTMOCFR5UBGR7GRVBLF6L3AMWLQM" alt="java-generic-extend"></p>
+<p><img src="https://github.com/Leeeyou/iBlogWebsite/blob/master/images/2018/code/java-generic-extend.png?raw=true" alt="java-generic-extend"></p>
 <p><em>List&lt;? extends Apple&gt; appleList;</em> 这句中的appleList能接收红色区域描述的<strong>任意类型中的（某一种）水果列表</strong>。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">    List&lt;RedApple&gt; redAppleList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    redAppleList.add(<span class="keyword">new</span> RedApple(<span class="string">&quot;红苹果1&quot;</span>));</span><br><span class="line">    redAppleList.add(<span class="keyword">new</span> RedApple(<span class="string">&quot;红苹果2&quot;</span>));</span><br><span class="line">    redAppleList.add(<span class="keyword">new</span> RedApple(<span class="string">&quot;红苹果3&quot;</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">//        List&lt;Apple&gt; appleList = redAppleList; //error，这里明确规定要求是Apple类型，没有灵活性可言。？没有继承关系可言</span></span><br><span class="line">    List&lt;? extends Apple&gt; appleList = redAppleList;<span class="comment">//利用通配符的灵活性，可以成功将 红苹果列表 赋值给 苹果列表</span></span><br><span class="line">    <span class="keyword">for</span> (Fruit fruit : appleList) &#123;</span><br><span class="line">        System.out.println(fruit.getName());</span><br><span class="line">    &#125;</span><br><span class="line">    System.out.println();</span><br><span class="line"></span><br><span class="line">    List&lt;GreenApple&gt; greenApples = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    greenApples.add(<span class="keyword">new</span> GreenApple(<span class="string">&quot;绿苹果1&quot;</span>));</span><br><span class="line">    greenApples.add(<span class="keyword">new</span> GreenApple(<span class="string">&quot;绿苹果2&quot;</span>));</span><br><span class="line">    greenApples.add(<span class="keyword">new</span> GreenApple(<span class="string">&quot;绿苹果3&quot;</span>));</span><br><span class="line">    greenApples.add(<span class="keyword">new</span> GreenApple(<span class="string">&quot;绿苹果4&quot;</span>));</span><br><span class="line">    appleList = greenApples;<span class="comment">//利用通配符，appleList 灵活的接收了 红苹果列表 和 绿苹果列表</span></span><br><span class="line">    <span class="keyword">for</span> (Fruit fruit : appleList) &#123;</span><br><span class="line">        System.out.println(fruit.getName());</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
 <h4 id="2-3-1-2-下界通配符"><a href="#2-3-1-2-下界通配符" class="headerlink" title="2.3.1.2. 下界通配符"></a>2.3.1.2. 下界通配符</h4><p>&lt;? super T&gt; 表示包括T在内的任何T的父类。如下关系图所示：</p>
-<p><img src="https://raw.githubusercontent.com/Leeeyou/iBlogRawResource/main/source/images/2018/code/java-generic-super.png?token=ABTMOCB4MHYF2SVHPSINYCDAMWLU2" alt="java-generic-super"></p>
+<p><img src="https://github.com/Leeeyou/iBlogWebsite/blob/master/images/2018/code/java-generic-super.png?raw=true" alt="java-generic-super"></p>
 <p><em>List&lt;? extends Apple&gt; appleList;</em> 这句中的appleList就能接收红色区域描述的<strong>任意类型中的（某一种）水果列表</strong>。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">    List&lt;Apple&gt; apples = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    apples.add(<span class="keyword">new</span> Apple(<span class="string">&quot;苹果1&quot;</span>));</span><br><span class="line">    apples.add(<span class="keyword">new</span> Apple(<span class="string">&quot;苹果2&quot;</span>));</span><br><span class="line">    apples.add(<span class="keyword">new</span> Apple(<span class="string">&quot;苹果3&quot;</span>));</span><br><span class="line"></span><br><span class="line">    List&lt;? <span class="keyword">super</span> Apple&gt; appleList = apples;</span><br><span class="line">    <span class="keyword">for</span> (Object object : appleList) &#123;</span><br><span class="line">        System.out.println(((Apple) object).getName());</span><br><span class="line">    &#125;</span><br><span class="line">    System.out.println();</span><br><span class="line"></span><br><span class="line">    List&lt;Fruit&gt; fruits = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    fruits.add(<span class="keyword">new</span> Fruit(<span class="string">&quot;水果1&quot;</span>));</span><br><span class="line">    fruits.add(<span class="keyword">new</span> Fruit(<span class="string">&quot;水果2&quot;</span>));</span><br><span class="line">    fruits.add(<span class="keyword">new</span> Fruit(<span class="string">&quot;水果3&quot;</span>));</span><br><span class="line">    appleList = fruits;</span><br><span class="line">    <span class="keyword">for</span> (Object object : appleList) &#123;</span><br><span class="line">        System.out.println(((Fruit) object).getName());</span><br><span class="line">    &#125;</span><br><span class="line">    System.out.println();</span><br><span class="line"></span><br><span class="line">    List&lt;RedApple&gt; redApples = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    redApples.add(<span class="keyword">new</span> RedApple(<span class="string">&quot;红苹果1&quot;</span>));</span><br><span class="line">    redApples.add(<span class="keyword">new</span> RedApple(<span class="string">&quot;红苹果2&quot;</span>));</span><br><span class="line">    redApples.add(<span class="keyword">new</span> RedApple(<span class="string">&quot;红苹果3&quot;</span>));</span><br><span class="line"><span class="comment">//        appleList = redApples;//error</span></span><br></pre></td></tr></table></figure>
 
@@ -531,7 +531,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-04-01 19:39:42" itemprop="dateModified" datetime="2021-04-01T19:39:42+08:00">2021-04-01</time>
+                <time title="Modified: 2021-04-01 19:52:30" itemprop="dateModified" datetime="2021-04-01T19:52:30+08:00">2021-04-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -557,7 +557,7 @@
           <p>这篇主要解决一个问题：怎样确定对象是否还“活着”？《深入理解Java虚拟机》中给出了两种方式：<strong>引用计数算法和可达性分析算法。</strong></p>
 <p>引用计数算法是给对象添加一个引用计数器，每当有一个地方引用它时，计数器值加1；当引用失效时，计数器值就减1；任何时刻计数器为0的对象就是不可能再被使用的。客观地说，引用计数算法实现简单，判定效率也很高，也有一些著名的应用案例。但是主流的Java虚拟机没有选用引用计数算法来管理内存，<strong>其中最主要的原因是它很难解决对象之间相互循环引用的问题。</strong></p>
 <p><strong>在主流的商用程序语言（Java、C#）的主流实现中，都是通过可达性分析来判定对象是否存活的。</strong> 这个算法的基本思路就是通过一系列的称为“GC Roots”的对象作为起始点，从这些节点开始向下搜索，搜索所走过的路径称为应用链，当一个对象到GC Roots没有任何引用链相连时，则证明此对象是不可用的。如下图所示，对象Object 5、Object 6、Object 7虽然互相有关联，但是它们到GC Roots是不可达的，所以它们将会被判定为是可回收的对象。</p>
-<p><img src="https://raw.githubusercontent.com/Leeeyou/iBlogRawResource/main/source/images/2018/code/jvm-object-accessibility-analysis.png?token=ABTMOCCQUZWUGZ4CO2VUKLLAMWYSW" alt="jvm-object-accessibility-analysis"></p>
+<p><img src="https://github.com/Leeeyou/iBlogWebsite/blob/master/images/2018/code/jvm-object-accessibility-analysis.png?raw=true" alt="jvm-object-accessibility-analysis"></p>
 <p>在Java语言中，可作为GC Roots的对象包括下面几种：</p>
 <blockquote>
 <p>虚拟机栈（栈帧中的本地变量表）中引用的对象。<br>方法区中类静态属性引用的对象。<br>方法区中常量引用的对象。<br>本地方法栈中JNI（即一般说的Native方法）引用的对象。</p>
@@ -617,7 +617,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-04-01 19:47:24" itemprop="dateModified" datetime="2021-04-01T19:47:24+08:00">2021-04-01</time>
+                <time title="Modified: 2021-04-01 19:56:04" itemprop="dateModified" datetime="2021-04-01T19:56:04+08:00">2021-04-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -642,9 +642,9 @@
       
           <p>Java程序通过栈上的reference数据来操作堆上的具体对象，由于reference类型在Java虚拟机规范中只规定了一个指向对象的引用，并没有定义这个引用应该通过何种方式去定位、访问堆中的对象的具体位置，所以对象访问方式也是取决于虚拟机实现而定的。目前主流的访问方式有使用句柄和直接指针两种。</p>
 <p>句柄方式是通过在Java堆中划分出一块内存来作为句柄池，reference中存储的就是对象的句柄地址，而句柄中包含了对象实例数据与类型数据各自的具体地址信息。句柄的最大好处就是reference中存储的是稳定的句柄地址，在对象被移动（GC时移动对象是非常普遍的行为）时只会改变句柄中的实例数据指针，而reference本身不需要修改。如下图所示：</p>
-<p><img src="https://raw.githubusercontent.com/Leeeyou/iBlogRawResource/main/source/images/2018/code/jvm-object-access-object-by-handle.jpg?token=ABTMOCCDJK2XTQRGCCYDXSTAMWZP6" alt="jvm-object-access-object-by-handle"></p>
+<p><img src="https://github.com/Leeeyou/iBlogWebsite/blob/master/images/2018/code/jvm-object-access-object-by-handle.jpg?raw=true" alt="jvm-object-access-object-by-handle"></p>
 <p>直接指针方式，reference中存储的直接就是对象地址，所以虚拟机设计者必须考虑如何放置访问类型数据的相关信息。直接指针的最大好处就是速度更快，它节省了一次指针定位的时间开销，由于对象的访问在Java中非常频繁，因此这类开销积少成多也是一项非常可观的执行成本。Hotspot虚拟机采用的是第二种方式进行对象访问，但从整个软件开发的范围来看，各种语言和框架使用句柄来访问的情况也十分常见。如下图所示：</p>
-<p><img src="https://raw.githubusercontent.com/Leeeyou/iBlogRawResource/main/source/images/2018/code/jvm-object-direct-pointer-access-to-objects.jpg?token=ABTMOCEFD6FFKW57TXYYUNDAMWY36" alt="jvm-object-direct-pointer-access-to-objects"></p>
+<p><img src="https://github.com/Leeeyou/iBlogWebsite/blob/master/images/2018/code/jvm-object-direct-pointer-access-to-objects.jpg?raw=true" alt="jvm-object-direct-pointer-access-to-objects"></p>
 <hr>
 <p>参考： </p>
 <ol>
@@ -700,7 +700,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-04-01 19:42:59" itemprop="dateModified" datetime="2021-04-01T19:42:59+08:00">2021-04-01</time>
+                <time title="Modified: 2021-04-01 19:53:54" itemprop="dateModified" datetime="2021-04-01T19:53:54+08:00">2021-04-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -735,7 +735,7 @@
 <p>打印结果如下所示，可以看到重排顺序offset是36，加上4个字节即36 + 4 = 40 bytes，同Instrumentation计算出来的40 bytes一致。运行Instrumentation时，我这里采用了 <a target="_blank" rel="noopener" href="https://www.javamex.com/classmexer/classmexer-0_03.zip">classmexer-0_03.zip</a> 这个jar包来帮我统计大小。我采用IntelliJ运行，需要添加一下jvm的运行时参数 <strong>-javaagent:classmexer.jar</strong>，如下图所示：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">定义顺序</span><br><span class="line">field s 	 offset : <span class="number">32</span>	</span><br><span class="line">field i 	 offset : <span class="number">12</span>	</span><br><span class="line">field b 	 offset : <span class="number">28</span>	</span><br><span class="line">field d 	 offset : <span class="number">16</span>	</span><br><span class="line">field b2 	 offset : <span class="number">29</span>	</span><br><span class="line">field obj 	 offset : <span class="number">36</span>	</span><br><span class="line">field b3 	 offset : <span class="number">30</span>	</span><br><span class="line">field i2 	 offset : <span class="number">24</span>	</span><br><span class="line"></span><br><span class="line">重排顺序</span><br><span class="line">field i 	 offset : <span class="number">12</span>	</span><br><span class="line">field d 	 offset : <span class="number">16</span>	</span><br><span class="line">field i2 	 offset : <span class="number">24</span>	</span><br><span class="line">field b 	 offset : <span class="number">28</span>	</span><br><span class="line">field b2 	 offset : <span class="number">29</span>	</span><br><span class="line">field b3 	 offset : <span class="number">30</span>	</span><br><span class="line">field s 	 offset : <span class="number">32</span>	</span><br><span class="line">field obj 	 offset : <span class="number">36</span>	</span><br><span class="line"></span><br><span class="line">Shallow Size: <span class="number">40</span> bytes</span><br><span class="line">Retained Size: <span class="number">40</span> bytes</span><br><span class="line"></span><br><span class="line">Process finished with exit code <span class="number">0</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p><img src="https://raw.githubusercontent.com/Leeeyou/iBlogRawResource/main/source/images/2018/code/jvm-object-object-layout-analysis.png?token=ABTMOCDGHFPSZM6YHYTMWWDAMWY6C" alt="jvm-object-object-layout-analysis"></p>
+<p><img src="https://github.com/Leeeyou/iBlogWebsite/blob/master/images/2018/code/jvm-object-object-layout-analysis.png?raw=true" alt="jvm-object-object-layout-analysis"></p>
 <p>下面分析未采用分配策略与采用了分配策略之间的区别，针对上述代码中的Person对象，如果未采用分配策略，直接分配内存，在内存中的布局如下所示，有9个对齐位，可以看到需要用到48 bytes：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[HEADER:   <span class="number">8</span> bytes]  <span class="number">8</span></span><br><span class="line">[oops:     <span class="number">4</span> bytes]  <span class="number">12</span></span><br><span class="line">[s:        <span class="number">4</span> bytes]  <span class="number">16</span></span><br><span class="line">[i:        <span class="number">4</span> bytes]  <span class="number">20</span></span><br><span class="line">[b:        <span class="number">1</span> <span class="keyword">byte</span> ]  <span class="number">21</span></span><br><span class="line">[padding:  <span class="number">3</span> bytes]  <span class="number">24</span></span><br><span class="line">[d:        <span class="number">8</span> bytes]  <span class="number">32</span></span><br><span class="line">[b2:       <span class="number">1</span> <span class="keyword">byte</span> ]  <span class="number">33</span></span><br><span class="line">[obj:      <span class="number">4</span> bytes]  <span class="number">37</span></span><br><span class="line">[b3:       <span class="number">1</span> <span class="keyword">byte</span> ]  <span class="number">38</span></span><br><span class="line">[padding:  <span class="number">2</span> <span class="keyword">byte</span> ]  <span class="number">40</span></span><br><span class="line">[i2:       <span class="number">4</span> bytes]  <span class="number">44</span></span><br><span class="line">[padding:  <span class="number">4</span> <span class="keyword">byte</span> ]  <span class="number">48</span></span><br></pre></td></tr></table></figure>
 
@@ -808,7 +808,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-04-01 19:46:31" itemprop="dateModified" datetime="2021-04-01T19:46:31+08:00">2021-04-01</time>
+                <time title="Modified: 2021-04-01 19:54:13" itemprop="dateModified" datetime="2021-04-01T19:54:13+08:00">2021-04-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -833,7 +833,7 @@
       
           <p>这篇文章讨论一个在Java语言层面来看非常简单的问题：怎样创建对象？通常仅仅一个 new 关键字而已，但是在虚拟机中，对象（特指普通对象，不包括数组对象和Class对象）的创建流程又是怎样的呢？</p>
 <p>根据 <a target="_blank" rel="noopener" href="https://book.douban.com/subject/24722612/">深入理解Java虚拟机（第2版）</a> 中的知识，我画出了虚拟机创建普通对象的流程如，如下所示：</p>
-<p><img src="https://raw.githubusercontent.com/Leeeyou/iBlogRawResource/main/source/images/2018/code/jvm-object-the-process-of-creating-common-objects-in-virtual-machines.png?token=ABTMOCB26F6RCRRWHKQ3BATAMWZCW" alt="jvm-object-the-process-of-creating-common-objects-in-virtual-machines"></p>
+<p><img src="https://github.com/Leeeyou/iBlogWebsite/blob/master/images/2018/code/jvm-object-the-process-of-creating-common-objects-in-virtual-machines.png?raw=true" alt="jvm-object-the-process-of-creating-common-objects-in-virtual-machines"></p>
 <p>虚拟机在遇到一条new指令时，首先会检查这个指令的参数能否在常量池中定位到一个类的符号引用，并且检查这个符号引用所代表的类是否已被加载、解析和初始化过。如果没有，那必须先执行相应的类加载过程。</p>
 <p>在类加载检查通过后，接下来是虚拟机为新生对象分配内存。对象所需内存的大小在类加载完成后便可完全确定，为对象分配空间的任务等同于把一块确定大小的内存从Java堆中划分出来。Java堆是否规整决定了分配方式是 “指针碰撞” 还是 “空闲列表”。而Java堆是否规整依据的是GC的收集器采用的哪种分配算法，像Serial、ParNew等带整理算法的收集器，JVM会采用 “指针碰撞” 分配；而使用CMS这种标记-清除算法的收集器，JVM通常采用“空闲列表”分配。</p>
 <ul>
@@ -900,7 +900,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-04-01 19:45:17" itemprop="dateModified" datetime="2021-04-01T19:45:17+08:00">2021-04-01</time>
+                <time title="Modified: 2021-04-01 19:54:57" itemprop="dateModified" datetime="2021-04-01T19:54:57+08:00">2021-04-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -924,11 +924,11 @@
 
       
           <p>这是JVM系列的第一篇，所以简单介绍下该系列的大纲，如下图所示：</p>
-<p><img src="https://raw.githubusercontent.com/Leeeyou/iBlogRawResource/main/source/images/2018/code/jvm-outline.png?token=ABTMOCF7ZV4WFAERKYQR6TTAMWZE4" alt="jvm-outline"></p>
+<p><img src="https://github.com/Leeeyou/iBlogWebsite/blob/master/images/2018/code/jvm-outline.png?raw=true" alt="jvm-outline"></p>
 <p>该系列文章绝对部分的素材来源是《深入理解Java虚拟机2》这本书，整个系列可以看做是学习笔记，自己是先通读了一遍该书，然后整理脑图，按照上面的大纲再逐篇整理。主要目的是理解虚拟机中一些高深又晦涩的概念，以及虚拟机底层运行的一些基本“常识”，打好这块的基础，以便后续更容易掌握Android平台上的热修复、插件化以及Hook技术等的一些原理。</p>
 <p>该系列的简介就这样吧，下面是系列文章第一篇的正文内容。</p>
 <p>下面这张图是结合《深入理解Java虚拟机2》以及《Java核心36讲》中的内容画出来的，理论上看算是比较详细的描述了JVM运行时内存区域。从图中可以看出主要包含了两部分：运行时数据区与其他数据区（主要指直接内存和Code Cache），而在运行时数据区中又分为线程隔离和线程共享。</p>
-<p><img src="https://raw.githubusercontent.com/Leeeyou/iBlogRawResource/main/source/images/2018/code/jvm-runtime-memory-area.png?token=ABTMOCBP4CS3B5DMYG7T5RDAMWZHQ" alt="jvm-runtime-memory-area"></p>
+<p><img src="https://github.com/Leeeyou/iBlogWebsite/blob/master/images/2018/code/jvm-runtime-memory-area.png?raw=true" alt="jvm-runtime-memory-area"></p>
 <h1 id="1-运行时数据区"><a href="#1-运行时数据区" class="headerlink" title="1. 运行时数据区"></a>1. 运行时数据区</h1><h2 id="1-1-线程隔离"><a href="#1-1-线程隔离" class="headerlink" title="1.1. 线程隔离"></a>1.1. 线程隔离</h2><ul>
 <li><p>程序计数器</p>
 <p>程序计数器（PC，Program Counter Register）。在 JVM 规范中，每个线程都有它自己的程序计数器，并且任何时间一个线程都只有一个方法在执行，也就是所谓的当前方法。程序计数器会存储当前线程正在执行的 Java 方法的 JVM 指令地址；或者，如果是在执行本地方法，则是未指定值（undefined）。</p>
@@ -1018,7 +1018,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-03-05 11:22:54" itemprop="dateModified" datetime="2021-03-05T11:22:54+08:00">2021-03-05</time>
+                <time title="Modified: 2021-04-01 19:56:48" itemprop="dateModified" datetime="2021-04-01T19:56:48+08:00">2021-04-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
