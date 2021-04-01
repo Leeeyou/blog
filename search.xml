@@ -3084,7 +3084,7 @@
   <entry>
     <title>XML示例说明</title>
     <url>/iBlogWebsite/2018/08/30/2018/2018-08-30-XML%E7%A4%BA%E4%BE%8B/</url>
-    <content><![CDATA[<p><img src="../../../../images/githubpages/XML/XML%E7%A4%BA%E4%BE%8B%E5%9B%BE.jpg" alt="XML示例图"></p>
+    <content><![CDATA[<p><img src="https://github.com/Leeeyou/iBlogWebsite/blob/master/images/2018/code/xml-example-diagram.jpg?raw=true" alt="xml-example-diagram"></p>
 ]]></content>
       <categories>
         <category>code</category>
