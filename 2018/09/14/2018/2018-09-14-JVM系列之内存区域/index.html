@@ -20,21 +20,20 @@
     var CONFIG = {"hostname":"leeeyou.github.io","root":"/iBlogWebsite/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="这是JVM系列的第一篇，所以简单介绍下该系列的大纲，如下图所示：  该系列文章绝大部分的素材来源是《深入理解Java虚拟机2》这本书，整个系列可以看做是学习笔记，自己是先通读了一遍该书，然后整理脑图，按照上面的大纲再逐篇整理。主要目的是理解虚拟机中一些高深又晦涩的概念，以及虚拟机底层运行的一些基本“常识”，打好这块的基础，以便后续更容易掌握Android平台上的热修复、插件化以及Hook技术等的一">
+  <meta name="description" content="下面这张图是结合《深入理解Java虚拟机2》以及《Java核心36讲》中的内容画出来的，理论上看算是比较详细的描述了JVM运行时内存区域。从图中可以看出主要包含了两部分：运行时数据区与其他数据区（主要指直接内存和Code Cache），而在运行时数据区中又分为线程隔离和线程共享。  1. 运行时数据区1.1. 线程隔离 程序计数器 程序计数器（PC，Program Counter Register">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JVM系列之内存区域">
 <meta property="og:url" content="https://leeeyou.github.io/iBlogWebsite/2018/09/14/2018/2018-09-14-JVM%E7%B3%BB%E5%88%97%E4%B9%8B%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F/index.html">
 <meta property="og:site_name" content="Leeeyou123">
-<meta property="og:description" content="这是JVM系列的第一篇，所以简单介绍下该系列的大纲，如下图所示：  该系列文章绝大部分的素材来源是《深入理解Java虚拟机2》这本书，整个系列可以看做是学习笔记，自己是先通读了一遍该书，然后整理脑图，按照上面的大纲再逐篇整理。主要目的是理解虚拟机中一些高深又晦涩的概念，以及虚拟机底层运行的一些基本“常识”，打好这块的基础，以便后续更容易掌握Android平台上的热修复、插件化以及Hook技术等的一">
+<meta property="og:description" content="下面这张图是结合《深入理解Java虚拟机2》以及《Java核心36讲》中的内容画出来的，理论上看算是比较详细的描述了JVM运行时内存区域。从图中可以看出主要包含了两部分：运行时数据区与其他数据区（主要指直接内存和Code Cache），而在运行时数据区中又分为线程隔离和线程共享。  1. 运行时数据区1.1. 线程隔离 程序计数器 程序计数器（PC，Program Counter Register">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://github.com/Leeeyou/iBlogWebsite/blob/master/images/2018/code/jvm-outline.png?raw=true">
 <meta property="og:image" content="https://github.com/Leeeyou/iBlogWebsite/blob/master/images/2018/code/jvm-runtime-memory-area.png?raw=true">
 <meta property="article:published_time" content="2018-09-13T16:00:00.000Z">
-<meta property="article:modified_time" content="2021-04-01T12:16:33.333Z">
+<meta property="article:modified_time" content="2021-04-02T02:11:48.498Z">
 <meta property="article:author" content="Leeeyou">
 <meta property="article:tag" content="JVM">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://github.com/Leeeyou/iBlogWebsite/blob/master/images/2018/code/jvm-outline.png?raw=true">
+<meta name="twitter:image" content="https://github.com/Leeeyou/iBlogWebsite/blob/master/images/2018/code/jvm-runtime-memory-area.png?raw=true">
 
 <link rel="canonical" href="https://leeeyou.github.io/iBlogWebsite/2018/09/14/2018/2018-09-14-JVM%E7%B3%BB%E5%88%97%E4%B9%8B%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F/">
 
@@ -222,7 +221,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-04-01 20:16:33" itemprop="dateModified" datetime="2021-04-01T20:16:33+08:00">2021-04-01</time>
+                <time title="Modified: 2021-04-02 10:11:48" itemprop="dateModified" datetime="2021-04-02T10:11:48+08:00">2021-04-02</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -245,11 +244,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>这是JVM系列的第一篇，所以简单介绍下该系列的大纲，如下图所示：</p>
-<p><img src="https://github.com/Leeeyou/iBlogWebsite/blob/master/images/2018/code/jvm-outline.png?raw=true" alt="jvm-outline"></p>
-<p>该系列文章绝大部分的素材来源是《深入理解Java虚拟机2》这本书，整个系列可以看做是学习笔记，自己是先通读了一遍该书，然后整理脑图，按照上面的大纲再逐篇整理。主要目的是理解虚拟机中一些高深又晦涩的概念，以及虚拟机底层运行的一些基本“常识”，打好这块的基础，以便后续更容易掌握Android平台上的热修复、插件化以及Hook技术等的一些原理。</p>
-<p>该系列的简介就这样吧，下面是系列文章第一篇的正文内容。</p>
-<p>下面这张图是结合《深入理解Java虚拟机2》以及《Java核心36讲》中的内容画出来的，理论上看算是比较详细的描述了JVM运行时内存区域。从图中可以看出主要包含了两部分：运行时数据区与其他数据区（主要指直接内存和Code Cache），而在运行时数据区中又分为线程隔离和线程共享。</p>
+        <p>下面这张图是结合《深入理解Java虚拟机2》以及《Java核心36讲》中的内容画出来的，理论上看算是比较详细的描述了JVM运行时内存区域。从图中可以看出主要包含了两部分：运行时数据区与其他数据区（主要指直接内存和Code Cache），而在运行时数据区中又分为线程隔离和线程共享。</p>
 <p><img src="https://github.com/Leeeyou/iBlogWebsite/blob/master/images/2018/code/jvm-runtime-memory-area.png?raw=true" alt="jvm-runtime-memory-area"></p>
 <h1 id="1-运行时数据区"><a href="#1-运行时数据区" class="headerlink" title="1. 运行时数据区"></a>1. 运行时数据区</h1><h2 id="1-1-线程隔离"><a href="#1-1-线程隔离" class="headerlink" title="1.1. 线程隔离"></a>1.1. 线程隔离</h2><ul>
 <li><p>程序计数器</p>
@@ -389,7 +384,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/iBlogWebsite/archives/">
         
-          <span class="site-state-item-count">121</span>
+          <span class="site-state-item-count">122</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

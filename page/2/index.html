@@ -183,6 +183,94 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://leeeyou.github.io/iBlogWebsite/2019/01/25/2019/2019-01-25-%E6%89%8B%E6%8A%8A%E6%89%8Bdebug%E6%BA%90%E7%A0%81%E4%B9%8BRetrofit/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars1.githubusercontent.com/u/6735624?s=460&v=4">
+      <meta itemprop="name" content="Leeeyou">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Leeeyou123">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/iBlogWebsite/2019/01/25/2019/2019-01-25-%E6%89%8B%E6%8A%8A%E6%89%8Bdebug%E6%BA%90%E7%A0%81%E4%B9%8BRetrofit/" class="post-title-link" itemprop="url">手把手debug源码之Retrofit</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-01-25 00:00:00" itemprop="dateCreated datePublished" datetime="2019-01-25T00:00:00+08:00">2019-01-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-03-08 11:21:16" itemprop="dateModified" datetime="2021-03-08T11:21:16+08:00">2021-03-08</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/iBlogWebsite/categories/code/" itemprop="url" rel="index"><span itemprop="name">code</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>本文基于Retrofit2.5.0进行源码分析，以发送一个异步get网络请求为例，直到取回数据再渲染到页面的整个过程。Gif示例如下：</p>
+<p><img src="https://github.com/Leeeyou/blog/blob/master/images/2019/code/source-code-analysis-retrofit-demo.gif?raw=true" alt="source-code-analysis-retrofit-demo"></p>
+<p>本文不过多解释Retrofit是怎样使用的，本文假设你已经使用过它并对其有一定程度的了解，那么你应该清楚它有几个可以自由配置的属性分别是：callFactory、converterFactories、callAdapterFactories、callbackExecutor；掌握这几个属性对于理解Retrofit源码起着关键作用。</p>
+<blockquote>
+<p><em><strong>callFactory</strong></em>：网络请求器，用于发起真正的网络请求。<br><em><strong>converterFactories</strong></em>：数据转换器，用于将网络请求的结果转换成你想要的目标数据结构，比如<em>Gson</em>、<em>Jackson</em>、<em>Simple XML</em>。<br><em><strong>callAdapterFactories</strong></em>：网络请求适配器，用于将网络请求包装成不同的类型，如默认的Call、<a target="_blank" rel="noopener" href="https://github.com/square/retrofit/blob/master/retrofit-adapters/rxjava2/README.md"><em>RxJava2的Observable</em></a>、<a target="_blank" rel="noopener" href="https://github.com/JakeWharton/retrofit2-kotlin-coroutines-adapter"><em>Kotlin的coroutines</em></a>。<br><em><strong>callbackExecutor</strong></em>：回调执行器，用于将网络请求的结果从子线程拉回到主线程。</p>
+</blockquote>
+<p>使用Retrofit发送一个网络请求的代码如下所示，你也可以直接下载<a target="_blank" rel="noopener" href="https://github.com/Leeeyou/SourceCodeAnalysisRetrofit"><em>demo</em></a>运行。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//step1:创建Retrofit实例</span></span><br><span class="line"><span class="keyword">val</span> retrofit = Retrofit.Builder()</span><br><span class="line">        .baseUrl(<span class="string">&quot;http://gank.io/api/&quot;</span>)</span><br><span class="line">        .addConverterFactory(GsonConverterFactory.create())</span><br><span class="line">        .build()</span><br><span class="line"></span><br><span class="line"><span class="comment">//step2:创建接口服务类的代理对象，这里是gankService</span></span><br><span class="line"><span class="keyword">val</span> gankService = retrofit.create(GankService::<span class="keyword">class</span>.java)</span><br><span class="line"></span><br><span class="line"><span class="comment">//step3:访问接口服务类中的具体业务方法，得到一个适配器对象，这里的categoriesCall是Call&lt;ResponseCategory&gt;类型</span></span><br><span class="line"><span class="keyword">val</span> categoriesCall = gankService.categories()</span><br><span class="line"></span><br><span class="line"><span class="comment">//step4:通过categoriesCall发起网络请求，在Callback中解析数据并处理后续业务逻辑。</span></span><br><span class="line">categoriesCall.enqueue(<span class="keyword">object</span> : Callback&lt;ResponseCategory&gt; &#123;</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onFailure</span><span class="params">(call: <span class="type">Call</span>&lt;<span class="type">ResponseCategory</span>&gt;, t: <span class="type">Throwable</span>)</span></span> &#123;</span><br><span class="line">        Log.e(<span class="string">&quot;MainActivity&quot;</span>, <span class="string">&quot;访问失败&quot;</span>, t)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onResponse</span><span class="params">(call: <span class="type">Call</span>&lt;<span class="type">ResponseCategory</span>&gt;, response: <span class="type">Response</span>&lt;<span class="type">ResponseCategory</span>&gt;)</span></span> &#123;</span><br><span class="line">        <span class="keyword">val</span> body = response.body()</span><br><span class="line">        body?.takeIf &#123; result -&gt; !result.isError &#125;?.also &#123; category -&gt;</span><br><span class="line">            Toast.makeText(<span class="keyword">this</span><span class="symbol">@MainActivity</span>, <span class="string">&quot;访问成功 -&gt; &quot;</span> + Gson().toJson(category), Toast.LENGTH_SHORT).show()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/iBlogWebsite/2019/01/25/2019/2019-01-25-%E6%89%8B%E6%8A%8A%E6%89%8Bdebug%E6%BA%90%E7%A0%81%E4%B9%8BRetrofit/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://leeeyou.github.io/iBlogWebsite/2018/12/12/2018/2018-12-12-Kotlin%E6%89%A9%E5%B1%95%E4%B9%8B%E5%8D%8F%E7%A8%8B%E7%AF%87/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1057,90 +1145,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://leeeyou.github.io/iBlogWebsite/2018/09/26/2018/2018-09-26-JVM%E7%B3%BB%E5%88%97%E4%B9%8BGC-Part3GC%E5%88%86%E7%B1%BB/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="https://avatars1.githubusercontent.com/u/6735624?s=460&v=4">
-      <meta itemprop="name" content="Leeeyou">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Leeeyou123">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/iBlogWebsite/2018/09/26/2018/2018-09-26-JVM%E7%B3%BB%E5%88%97%E4%B9%8BGC-Part3GC%E5%88%86%E7%B1%BB/" class="post-title-link" itemprop="url">JVM系列之GC-Part3GC分类</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2018-09-26 09:17:52" itemprop="dateCreated datePublished" datetime="2018-09-26T09:17:52+08:00">2018-09-26</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-03-29 09:35:49" itemprop="dateModified" datetime="2021-03-29T09:35:49+08:00">2021-03-29</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/iBlogWebsite/categories/code/" itemprop="url" rel="index"><span itemprop="name">code</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>这里谈论的GC分类主要是理清楚在各分代中会发生什么GC以及其作用是什么。</p>
-<p>新生代GC（Minor GC）：指发生在新生代的垃圾收集动作，因为Java对象大多都具备朝生夕灭的特性，所以Minor GC非常频繁，一般回收速度也比较快。</p>
-<p>老年代GC（Major GC / Full GC）：指发生在老年代的GC，出现了Major GC，经常会伴随至少一次的Minor GC（但非绝对的，在Parallel Scavenge收集器的收集策略里就有直接进行Major GC的策略选择过程）。Major GC的速度一般会比Minor GC慢10倍以上。</p>
-<p>我们可以认为Major GC == Full GC，它们是一个概念，就是针对 <strong>[老年代/永久代]</strong> 进行GC。因为取名叫Full就会让人疑惑，到底会不会先Minor GC。事实上Full GC本身不会先进行Minor GC，我们可以配置，让Full GC之前先进行一次Minor GC，因为老年代很多对象都会引用到新生代的对象，先进行一次Minor GC可以提高老年代GC的速度。比如老年代使用CMS时，设置CMSScavengeBeforeRemark优化，让CMS remark之前先进行一次Minor GC。</p>
-<p>弄清楚了Full GC本意单纯就是针对老年代了之后，我们再进一步深入理解Full GC的含义。上篇文章介绍过，因为CMS主要可以分为initial mark(stop the world), concurrent mark, remark(stop the world), concurrent sweep几个阶段，其中initial mark和remark会stop the world。Full GC的次数和时间等同于老年代GC时 stop the world的次数和时间。</p>
-<hr>
-<p>参考： </p>
-<ol>
-<li><a target="_blank" rel="noopener" href="https://book.douban.com/subject/24722612/">深入理解Java虚拟机（第2版）</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/ITer_ZC/article/details/41825395">聊聊JVM（四）深入理解Major GC, Full GC, CMS</a></li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1212,7 +1216,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/iBlogWebsite/archives/">
         
-          <span class="site-state-item-count">121</span>
+          <span class="site-state-item-count">122</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
