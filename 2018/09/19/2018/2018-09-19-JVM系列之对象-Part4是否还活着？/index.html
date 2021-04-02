@@ -29,7 +29,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://github.com/Leeeyou/iBlogWebsite/blob/master/images/2018/code/jvm-object-accessibility-analysis.png?raw=true">
 <meta property="article:published_time" content="2018-09-18T16:00:00.000Z">
-<meta property="article:modified_time" content="2021-04-01T11:52:30.132Z">
+<meta property="article:modified_time" content="2021-04-02T02:02:45.060Z">
 <meta property="article:author" content="Leeeyou">
 <meta property="article:tag" content="JVM">
 <meta name="twitter:card" content="summary">
@@ -221,7 +221,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-04-01 19:52:30" itemprop="dateModified" datetime="2021-04-01T19:52:30+08:00">2021-04-01</time>
+                <time title="Modified: 2021-04-02 10:02:45" itemprop="dateModified" datetime="2021-04-02T10:02:45+08:00">2021-04-02</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -246,7 +246,7 @@
       
         <p>这篇主要解决一个问题：怎样确定对象是否还“活着”？《深入理解Java虚拟机》中给出了两种方式：<strong>引用计数算法和可达性分析算法。</strong></p>
 <p>引用计数算法是给对象添加一个引用计数器，每当有一个地方引用它时，计数器值加1；当引用失效时，计数器值就减1；任何时刻计数器为0的对象就是不可能再被使用的。客观地说，引用计数算法实现简单，判定效率也很高，也有一些著名的应用案例。但是主流的Java虚拟机没有选用引用计数算法来管理内存，<strong>其中最主要的原因是它很难解决对象之间相互循环引用的问题。</strong></p>
-<p><strong>在主流的商用程序语言（Java、C#）的主流实现中，都是通过可达性分析来判定对象是否存活的。</strong> 这个算法的基本思路就是通过一系列的称为“GC Roots”的对象作为起始点，从这些节点开始向下搜索，搜索所走过的路径称为应用链，当一个对象到GC Roots没有任何引用链相连时，则证明此对象是不可用的。如下图所示，对象Object 5、Object 6、Object 7虽然互相有关联，但是它们到GC Roots是不可达的，所以它们将会被判定为是可回收的对象。</p>
+<p><strong>在主流的商用程序语言（Java、C#）的主流实现中，都是通过可达性分析来判定对象是否存活的。</strong> 这个算法的基本思路就是通过一系列的称为“GC Roots”的对象作为起始点，从这些节点开始向下搜索，搜索所走过的路径称为引用链，当一个对象到GC Roots没有任何引用链相连时，则证明此对象是不可用的。如下图所示，对象Object 5、Object 6、Object 7虽然互相有关联，但是它们到GC Roots是不可达的，所以它们将会被判定为是可回收的对象。</p>
 <p><img src="https://github.com/Leeeyou/iBlogWebsite/blob/master/images/2018/code/jvm-object-accessibility-analysis.png?raw=true" alt="jvm-object-accessibility-analysis"></p>
 <p>在Java语言中，可作为GC Roots的对象包括下面几种：</p>
 <blockquote>
