@@ -30,7 +30,7 @@
 <meta property="og:image" content="https://github.com/Leeeyou/blog/blob/master/images/2018/code/jvm-efficient-concurrency-processor-cache-main-memory.png?raw=true">
 <meta property="og:image" content="https://github.com/Leeeyou/blog/blob/master/images/2018/code/jvm-efficient-concurrency-threads-working-memory-and-main-memory.png?raw=true">
 <meta property="article:published_time" content="2018-11-07T16:00:00.000Z">
-<meta property="article:modified_time" content="2021-04-06T09:31:51.116Z">
+<meta property="article:modified_time" content="2021-04-06T09:34:36.612Z">
 <meta property="article:author" content="Leeeyou">
 <meta property="article:tag" content="JVM">
 <meta property="article:tag" content="高效并发">
@@ -223,7 +223,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-04-06 17:31:51" itemprop="dateModified" datetime="2021-04-06T17:31:51+08:00">2021-04-06</time>
+                <time title="Modified: 2021-04-06 17:34:36" itemprop="dateModified" datetime="2021-04-06T17:34:36+08:00">2021-04-06</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -337,7 +337,7 @@
 
 <p>上述代码显示的是一组再普通不过的getter/setter方法，假设存在线程A和B，线程A先（时间上的先后）调用了”setValue(1)”，然后线程B调用了同一个对象的 “getValue()”，那么线程B收到的返回值是什么？ </p>
 <p>我们依次分折一下先行发生原则中的各项规则，由于两个方法分别由线程A和线程B调用，不在一个线程中，所以程序次序规则在这里不适用；由于没有同步块，自然就不会发生lock和unlock操作，所以管程锁定规则不适用；由于value变量没有被volatile关键字修饰，所以volatile变量规则不适用；后面的线程启动、终止、中断规则和对象终结规则也和这里完全没有关系。因为没有一个适用的先行发生规则，所以最后一条传递性也无从谈起，因此我们可以判定尽管线程A在操作时间上先于线程B，但是无法确定线程B中 “getValue()” 方法的返回结果，换句话说这里面的操作不是线程安全的。 </p>
-<p>那怎么修复这个问题呢？我们至少有两种比较简单的方案可以选择：要么把getter/setter方法都定义为synchronized方法，这样就可以套用管程锁定规则；要么把value定义为volatile变量，由于setter方法对value的修改不依赖value的原值，满足volatile关键字使用场景，这样就可以套用volatile变量规则来实现先行发生关系。通过上面的例子我们可以得出结论：一个操作”时间上的先发生”不代表这个操作会是”先行发生”，那如果一个操作”先行发生”是否就能推导出这个操作必定是”时间上的先发生”呢？很遗憾，**这个推论也是不成立的，一个典型的例子就是多次提到的”指令重排序”**，如下代码所示：</p>
+<p>那怎么修复这个问题呢？我们至少有两种比较简单的方案可以选择：要么把getter/setter方法都定义为synchronized方法，这样就可以套用管程锁定规则；要么把value定义为volatile变量，由于setter方法对value的修改不依赖value的原值，满足volatile关键字使用场景，这样就可以套用volatile变量规则来实现先行发生关系。通过上面的例子我们可以得出结论：一个操作”时间上的先发生”不代表这个操作会是”先行发生”，那如果一个操作”先行发生”是否就能推导出这个操作必定是”时间上的先发生”呢？很遗憾，<strong>这个推论也是不成立的，一个典型的例子就是多次提到的”指令重排序”</strong> ，如下代码所示：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//以下操作在同一个线程中执行</span></span><br><span class="line"><span class="keyword">int</span> i = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">int</span> j = <span class="number">2</span>;</span><br></pre></td></tr></table></figure>
 
 <p>代码清单中的两条赋值语句在同一个线程之中，根据程序次序规则，”int i=1”的操作先行发生于”int j=2”，但是”int j=2”的代码完全可能先被处理器执行，这并不影响先行发生原则的正确性，因为我们在这条线程之中没有办法感知到这点。 </p>
