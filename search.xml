@@ -2189,7 +2189,7 @@
     <title>算法之图的深度优先遍历和广度优先遍历</title>
     <url>/iBlogWebsite/2016/02/23/2016/2016-02-23-%E7%AE%97%E6%B3%95%E4%B9%8B%E5%9B%BE%E7%9A%84%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E9%81%8D%E5%8E%86%E5%92%8C%E5%B9%BF%E5%BA%A6%E4%BC%98%E5%85%88%E9%81%8D%E5%8E%86/</url>
     <content><![CDATA[<p>图的遍历分为深度优先遍历(DFS Depth First Search)和广度优先遍历(BFS Breadth First Search)，其对有向图和无向图都适用。深度优先，顾名思义，就是只要存在后续节点就一直往下走，直到没有后续节点或者后续节点已经被访问输出了；广度优先，就是节点一层一层的输出。</p>
-<p><img src="../../../../images/githubpages/dfs_bfs.png" alt="dfs_bfs"></p>
+<p><img src="https://github.com/Leeeyou/iBlogWebsite/blob/master/images/2016/code/dfs-bfs?raw=true" alt="graph-dfs-bfs"></p>
 <p>如上图所示，对上图进行深度优先排序和广度优先排序的代码如下：</p>
 <h1 id="1-深度优先遍历"><a href="#1-深度优先遍历" class="headerlink" title="1. 深度优先遍历"></a>1. 深度优先遍历</h1><p>有两种方式可以完成深度优先遍历  </p>
 <p>1、利用栈的数据结构<br>2、利用递归  </p>
