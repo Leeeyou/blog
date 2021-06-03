@@ -2670,7 +2670,16 @@
 <li>常用的hashMap或bitmap</li>
 <li>难点：通讯、时间或空间的估算</li>
 </ul>
-<h1 id="4-实战演练"><a href="#4-实战演练" class="headerlink" title="4. 实战演练"></a>4. 实战演练</h1><h2 id="4-1-请对10亿个ipv4的ip地址进行排序，每个ip只会出现一次"><a href="#4-1-请对10亿个ipv4的ip地址进行排序，每个ip只会出现一次" class="headerlink" title="4.1. 请对10亿个ipv4的ip地址进行排序，每个ip只会出现一次"></a>4.1. 请对10亿个ipv4的ip地址进行排序，每个ip只会出现一次</h2><p>ipv4的ip数量约等于42亿</p>
+<h1 id="4-实战演练"><a href="#4-实战演练" class="headerlink" title="4. 实战演练"></a>4. 实战演练</h1><h2 id="4-1-请对10亿个ipv4的ip地址进行排序，每个ip只会出现一次"><a href="#4-1-请对10亿个ipv4的ip地址进行排序，每个ip只会出现一次" class="headerlink" title="4.1. 请对10亿个ipv4的ip地址进行排序，每个ip只会出现一次"></a>4.1. 请对10亿个ipv4的ip地址进行排序，每个ip只会出现一次</h2><blockquote>
+<p>1TB = 1024GB<br>1GB = 1024MB<br>1MB = 1024KB<br>1KB = 1024B<br>1Byte = 8bit</p>
+</blockquote>
+<blockquote>
+<p><em>10亿个整数的大小 ≈ 4GB</em></p>
+</blockquote>
+<blockquote>
+<p>1个整数 = 4Byte<br>10亿个整数 = 1000000000 * 4Byte / 1024 / 1024 / 1024 ≈ 3.73GB<br>即可记住快速置换公式 10亿个Byte ≈ 0.93GB ≈ 1GB</p>
+</blockquote>
+<p>ipv4的ip数量约等于42亿</p>
 <p><img src="https://github.com/Leeeyou/iBlogWebsite/blob/master/images/2016/code/algorithm-ipv4-01.png?raw=true" alt="algorithm-ipv4-01"></p>
 <p>虽然4G内存也不是特别大，但是我们有更好的方法。<br>申请长度为2的32次方的bit类型的数组。</p>
 <p><img src="https://github.com/Leeeyou/iBlogWebsite/blob/master/images/2016/code/algorithm-ipv4-02.png?raw=true" alt="algorithm-ipv4-02"></p>
