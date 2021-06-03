@@ -441,10 +441,12 @@
 </ol>
 <p>在了解了高德纳提出的思想后，对于算法复杂度关心的点以及评判标准才有了“最正宗”的理解。关心的是大量数据的问题，排除掉不变的因素，且只关注量级的差别，这其实是一个理想的环境，这种假设是非常有意义的。吴军老师说“回顾下科学发展的历史，那些能总结出理论的人要做的第一件事，就是多虑掉所有次要的因素，构建一个理想的环境（或者虚拟的环境），其目的是找到真正的主要矛盾，先把主要问题解决了再说。这些人的思维方式，比普通人是高出一大截的。我们都同意艺术上要有想象力，其实在科学上也是如此，抽象的想象力很重要。”</p>
 <p>在有了上面这段内容作为基础后，下面对时间复杂度和空间复杂度的讲述会简单很多。</p>
-<h1 id="1-时间复杂度"><a href="#1-时间复杂度" class="headerlink" title="1. 时间复杂度"></a>1. 时间复杂度</h1><p>一句话描述就是：<strong>一个算法在问题规模不断增大时对应的时间增长曲线。</strong><br>看完下面这两张图，你大概能理解问题规模的增大以及时间增长曲线之间的关系。<br><img src="../../../../images/githubpages/time_complexity/time_complexity_summary.jpg" alt="time_complexity_summary"></p>
-<p><img src="../../../../images/githubpages/time_complexity/time_complexity_problem_size.jpg" alt="time_complexity_problem_size"></p>
+<h1 id="1-时间复杂度"><a href="#1-时间复杂度" class="headerlink" title="1. 时间复杂度"></a>1. 时间复杂度</h1><p>一句话描述就是：<strong>一个算法在问题规模不断增大时对应的时间增长曲线。</strong><br>看完下面这两张图，你大概能理解问题规模的增大以及时间增长曲线之间的关系。</p>
+<p><img src="https://github.com/Leeeyou/iBlogWebsite/blob/master/images/2018/code/algorithm-time-complexity-summary.jpg?raw=true" alt="algorithm-time-complexity-summary"></p>
+<p><img src="https://github.com/Leeeyou/iBlogWebsite/blob/master/images/2018/code/algorithm-time-complexity-problem-size.jpg?raw=true" alt="algorithm-time-complexity-problem-size"></p>
 <p>从第二张图可以直观的反应出指数、立方和平方级别同线性对数级别的时间增长曲线不在一个量级上。所以你在写代码时，到底选择怎样的时间曲线增长量级是不是有底了？这里其实也印证了高德纳思想的第1和第3点，那第2点排除掉不变的因素怎么理解，这需要用到数学公式了。</p>
-<p>在数学上定义： 存在常数 c，使得当 N &gt;= c 时 T(N) &lt;= f(N)，表示为 T(n) = O(f(n)) 。<br>算法需要执行的运算次数 用输入大小n的函数表示，即 T(n)。如下图示：<br><img src="../../../../images/githubpages/time_complexity/time_complexity_math.jpg" alt="time_complexity_math"></p>
+<p>在数学上定义： 存在常数 c，使得当 N &gt;= c 时 T(N) &lt;= f(N)，表示为 T(n) = O(f(n)) 。<br>算法需要执行的运算次数 用输入大小n的函数表示，即 T(n)。如下图示：  </p>
+<p><img src="https://github.com/Leeeyou/iBlogWebsite/blob/master/images/2018/code/algorithm-time-complexity-math.jpg?raw=true" alt="algorithm-time-complexity-math"></p>
 <p>当 N &gt;= 2 的时候，f(n) = n^2 总是大于 T(n) = n + 2 的，于是我们说 f(n) 的增长速度是大于或者等于 T(n) 的，也说 f(n) 是 T(n) 的上界，可以表示为 T(n) = O(f(n))。</p>
 <p>因为f(n) 的增长速度是大于或者等于 T(n) 的，即T(n) = O(f(n))，所以我们可以用 f(n) 的增长速度来度量 T(n) 的增长速度，所以我们说这个算法的时间复杂度是 O(f(n))。其实就是我们通常所说的大O推倒法，几条重要的准则如下：<br>1.用常数1来取代运行时间中所有加法常数。<br>2.修改后的运行次数函数中，只保留最高阶项。<br>3.如果最高阶项存在且不是1，则去除与这个项相乘的常数。  </p>
 <p>至此，时间复杂度讲述完毕，没有复杂的描述，利用几张图和一个数学公式推倒就能理解好。另外还需要掌握时间复杂度分析的基本策略：<strong>从内向外分析，从最深层开始分析。如果遇到函数调用，要深入函数进行分析。</strong></p>
@@ -2191,7 +2193,7 @@
     <content><![CDATA[<p>图的遍历分为深度优先遍历(DFS Depth First Search)和广度优先遍历(BFS Breadth First Search)，其对有向图和无向图都适用。</p>
 <p>深度优先就是只要存在后续节点就一直往下走，直到没有后续节点或者后续节点已经被访问输出了。</p>
 <p>广度优先就是节点一层一层的输出。</p>
-<p><img src="https://github.com/Leeeyou/iBlogWebsite/blob/master/images/2016/code/dfs-bfs.png?raw=true" alt="graph-dfs-bfs"></p>
+<p><img src="https://github.com/Leeeyou/iBlogWebsite/blob/master/images/2016/code/algorithm-dfs-bfs.png?raw=true" alt="graph-dfs-bfs"></p>
 <p>下面的两段代码会先生成node节点，然后将其加入到ArrayList集合中。然后用一个而为数组描述图的各个连接状态，比如有无邻居节点，有无后序节点。</p>
 <p>如上图所示，对上图进行深度优先排序和广度优先排序的代码如下：</p>
 <h1 id="1-深度优先遍历"><a href="#1-深度优先遍历" class="headerlink" title="1. 深度优先遍历"></a>1. 深度优先遍历</h1><p>有两种方式可以完成深度优先遍历  </p>
@@ -2701,19 +2703,24 @@
   <entry>
     <title>算法之位运算</title>
     <url>/iBlogWebsite/2016/03/23/2016/2016-03-23-%E7%AE%97%E6%B3%95%E4%B9%8B%E4%BD%8D%E8%BF%90%E7%AE%97/</url>
-    <content><![CDATA[<h1 id="1-布隆过滤器"><a href="#1-布隆过滤器" class="headerlink" title="1. 布隆过滤器"></a>1. 布隆过滤器</h1><p><img src="../../../../images/githubpages/bulong01.png" alt="bulong01"><br><img src="../../../../images/githubpages/bulong02.png" alt="bulong01"><br><img src="../../../../images/githubpages/bulong03.png" alt="bulong01">  </p>
+    <content><![CDATA[<h1 id="1-布隆过滤器"><a href="#1-布隆过滤器" class="headerlink" title="1. 布隆过滤器"></a>1. 布隆过滤器</h1><p><img src="https://github.com/Leeeyou/iBlogWebsite/blob/master/images/2016/code/algorithm-bloom-filter-01.png?raw=true" alt="algorithm-bloom-filter-01"></p>
+<p><img src="https://github.com/Leeeyou/iBlogWebsite/blob/master/images/2016/code/algorithm-bloom-filter-02.png?raw=true" alt="algorithm-bloom-filter-02"></p>
+<p><img src="https://github.com/Leeeyou/iBlogWebsite/blob/master/images/2016/code/algorithm-bloom-filter-03.png?raw=true" alt="algorithm-bloom-filter-03"></p>
 <ul>
 <li>布隆过滤器可精确的代表一个集合，可精确判断某一元素是否在此集合中。精确程度由用户的具体设计决定，做到100%的精确即正确是不可能的。</li>
 </ul>
-<p><img src="../../../../images/githubpages/bulong04.png" alt="bulong01"><br><img src="../../../../images/githubpages/bulong05.png" alt="bulong01">  </p>
+<p><img src="https://github.com/Leeeyou/iBlogWebsite/blob/master/images/2016/code/algorithm-bloom-filter-04.png?raw=true" alt="algorithm-bloom-filter-04"></p>
+<p><img src="https://github.com/Leeeyou/iBlogWebsite/blob/master/images/2016/code/algorithm-bloom-filter-05.png?raw=true" alt="algorithm-bloom-filter-05"></p>
 <ul>
-<li><p>布隆过滤器的优势在于，利用很少的空间可以做到精确率较高。</p>
-</li>
-<li><p>布隆过滤器的bitarray大小如何确定？<br><img src="../../../../images/githubpages/bulong06.png" alt="bulong01"><br><img src="../../../../images/githubpages/bulong07.png" alt="bulong01">  </p>
-</li>
-<li><p>总结生成布隆过滤器的过程<br><img src="../../../../images/githubpages/bulong08.png" alt="bulong01"></p>
-</li>
+<li>布隆过滤器的优势在于，利用很少的空间可以做到精确率较高。</li>
+<li>布隆过滤器的bitarray大小如何确定？</li>
 </ul>
+<p><img src="https://github.com/Leeeyou/iBlogWebsite/blob/master/images/2016/code/algorithm-bloom-filter-05.png?raw=true" alt="algorithm-bloom-filter-05"></p>
+<p><img src="https://github.com/Leeeyou/iBlogWebsite/blob/master/images/2016/code/algorithm-bloom-filter-7.png?raw=true" alt="algorithm-bloom-filter-7"></p>
+<ul>
+<li>总结生成布隆过滤器的过程</li>
+</ul>
+<p><img src="https://github.com/Leeeyou/iBlogWebsite/blob/master/images/2016/code/algorithm-bloom-filter-08.png?raw=true" alt="algorithm-bloom-filter-08"></p>
 <h1 id="2-实战演练"><a href="#2-实战演练" class="headerlink" title="2. 实战演练"></a>2. 实战演练</h1><h2 id="2-1-寻找奇数出现"><a href="#2-1-寻找奇数出现" class="headerlink" title="2.1. 寻找奇数出现"></a>2.1. 寻找奇数出现</h2><p>有一个整型数组A，其中只有一个数出现了奇数次，其他的数都出现了偶数次，请打印这个数。要求时间复杂度为O(N)，额外空间复杂度为O(1)。</p>
 <p>给定整形数组A及它的大小n，请返回题目所求数字。<br>测试样例：<br>[1,2,3,2,1],5<br>返回：3</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">import java.util.*;</span><br><span class="line"></span><br><span class="line">public class OddAppearance &#123;</span><br><span class="line">    public int findOdd(int[] A, int n) &#123;</span><br><span class="line">        int result&#x3D;0;</span><br><span class="line">        for(int i&#x3D;0;i&lt;n;i++)&#123;</span><br><span class="line">            result ^&#x3D; A[i];</span><br><span class="line">        &#125;</span><br><span class="line">        return result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -6327,7 +6334,7 @@
 
 <p>各个基本排序算法的源码参考：<a href="https://github.com/Leeeyou/iLeetcode/tree/main/src/personalwebsite/sort">https://github.com/Leeeyou/iLeetcode/tree/main/src/personalwebsite/sort</a></p>
 <p>下图是各排序算法的时间空间复杂度：</p>
-<p><img src="https://github.com/Leeeyou/iBlogWebsite/blob/master/images/2016/code/time-complexity-of-each-sorting-method.png?raw=true" alt="time-complexity-of-each-sorting-method"></p>
+<p><img src="https://github.com/Leeeyou/iBlogWebsite/blob/master/images/2016/code/algorithm-time-complexity-of-each-sorting-method.png?raw=true" alt="time-complexity-of-each-sorting-method"></p>
 <p>前提说明</p>
 <blockquote>
 <ul>
