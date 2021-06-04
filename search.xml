@@ -2664,7 +2664,6 @@
 <p><img src="https://github.com/Leeeyou/iBlogWebsite/blob/master/images/2016/code/algorithm-map-reduce-01.png?raw=true" alt="algorithm-map-reduce-01"></p>
 <p><img src="https://github.com/Leeeyou/iBlogWebsite/blob/master/images/2016/code/algorithm-map-reduce-02.png?raw=true" alt="algorithm-map-reduce-02"></p>
 <p><img src="https://github.com/Leeeyou/iBlogWebsite/blob/master/images/2016/code/algorithm-map-reduce-03.png?raw=true" alt="algorithm-map-reduce-03"></p>
-<p><img src="https://github.com/Leeeyou/iBlogWebsite/blob/master/images/2016/code/algorithm-map-reduce-04.png?raw=true" alt="algorithm-map-reduce-04"></p>
 <h1 id="3-常见海量处理题目解题关键"><a href="#3-常见海量处理题目解题关键" class="headerlink" title="3. 常见海量处理题目解题关键"></a>3. 常见海量处理题目解题关键</h1><ul>
 <li>分而治之，通过哈希函数将大任务分流到机器，或分流成小文件</li>
 <li>常用的hashMap或bitmap</li>
